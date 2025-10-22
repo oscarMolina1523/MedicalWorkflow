@@ -9,4 +9,5 @@ export interface BillingRequest {
   amount: number; // Monto total (calculado)
   status: BillingStatus;
   paymentMethod: Payment;
+  paidAt?: Date;
 }
