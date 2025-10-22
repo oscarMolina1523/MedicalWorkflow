@@ -4,7 +4,6 @@ export default class Inventory extends BaseModel {
   departmentId: string;
   medicationId: string;
   quantity: number;
-  lastRestockAt: Date;
   createdAt: Date;
   updatedAt: Date;
   createdBy: string;
@@ -15,7 +14,6 @@ export default class Inventory extends BaseModel {
     departmentId,
     medicationId,
     quantity,
-    lastRestockAt,
     createdAt,
     updatedAt,
     createdBy,
@@ -25,7 +23,6 @@ export default class Inventory extends BaseModel {
     departmentId: string;
     medicationId: string;
     quantity: number;
-    lastRestockAt: Date;
     createdAt: Date;
     updatedAt: Date;
     createdBy: string;
@@ -35,7 +32,6 @@ export default class Inventory extends BaseModel {
     this.departmentId = departmentId;
     this.medicationId = medicationId;
     this.quantity = quantity;
-    this.lastRestockAt = lastRestockAt;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.createdBy = createdBy;
