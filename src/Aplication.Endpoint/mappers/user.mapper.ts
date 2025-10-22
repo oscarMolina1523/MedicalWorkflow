@@ -14,7 +14,7 @@ export class UserMapper {
       email: dto.email,
       password: dto.password,
       roleId: dto.roleId ?? "default-role-id",
-      active: true,
+      active: dto.active,
       createdAt: now,
       updatedAt: now,
       createdBy: currentUser,

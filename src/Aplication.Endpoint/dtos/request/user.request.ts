@@ -3,4 +3,5 @@ export interface UserRequest {
   email: string;
   password: string;
   roleId?: string;
+  active: boolean;
 }
