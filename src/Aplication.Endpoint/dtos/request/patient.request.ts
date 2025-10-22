@@ -4,4 +4,5 @@ export interface PatientRequest {
   birthDate: Date;
   gender: string;
   departmentId: string;
+  medicalHistory: string;
 }
