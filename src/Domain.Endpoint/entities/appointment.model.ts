@@ -2,9 +2,9 @@ import { AppointmentStatus } from "./appointment.enum";
 import BaseModel from "./base.model";
 
 export default class Appointment extends BaseModel {
-  patientId: string; // FK a Patient
-  departmentId: string; // FK a Department
-  doctorId: string; // FK a User
+  patientId: string; 
+  departmentId: string; 
+  doctorId: string; 
   scheduledAt: Date;
   status: AppointmentStatus;
   notes: string;

@@ -4,12 +4,12 @@ export default class User extends BaseModel {
   username: string;
   email: string;
   password: string;
-  roleId: string; // FK a Role
+  roleId: string; 
   active: boolean;
   createdAt: Date;
   updatedAt: Date;
-  createdBy: string; // FK a User
-  updatedBy: string; // FK a User
+  createdBy: string; 
+  updatedBy: string; 
   departmentId?: string; // FK a Department (optional for CEO, Board of Directors)
 
   constructor({

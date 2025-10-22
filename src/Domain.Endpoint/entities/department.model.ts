@@ -3,7 +3,7 @@ import BaseModel from "./base.model";
 export default class Department extends BaseModel {
   name: string; // Cirugía, Pediatría, etc.
   description: string;
-  headId: string; // FK a User (jefe de departamento)
+  headId: string; 
   createdAt: Date;
   updatedAt: Date;
 

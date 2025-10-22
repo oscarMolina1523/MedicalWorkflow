@@ -5,12 +5,12 @@ export default class Patient extends BaseModel {
   lastName: string;
   birthDate: Date;
   gender: string;
-  departmentId: string; // FK a Departamento asignado
+  departmentId: string;
   medicalHistory: string; // JSON o tabla relacionada
   createdAt: Date;
   updatedAt: Date;
-  createdBy: string; // FK a User
-  updatedBy: string; // FK a User
+  createdBy: string; 
+  updatedBy: string; 
 
   constructor({
     id,
