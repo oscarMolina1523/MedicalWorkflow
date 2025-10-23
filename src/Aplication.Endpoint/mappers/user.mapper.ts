@@ -5,7 +5,7 @@ import { UserResponse } from "../dtos/response/user.response";
 
 
 export class UserMapper {
-  static toEntity(dto: UserRequest, currentUser:string, departmentId:string): User {
+  static toEntity(dto: UserRequest, currentUser:string): User {
     const now = new Date();
 
     return new User({
@@ -13,13 +13,13 @@ export class UserMapper {
       username: dto.username ?? dto.email.split("@")[0], 
       email: dto.email,
       password: dto.password,
-      roleId: dto.roleId ?? "default-role-id",
+      roleId: dto.roleId ?? "r-viewer",
       active: dto.active,
       createdAt: now,
       updatedAt: now,
       createdBy: currentUser,
       updatedBy: currentUser,
-      departmentId: departmentId,
+      departmentId: dto.departmentId,
     });
   }
 
