@@ -93,4 +93,13 @@ export const roleData: Role[] = [
     createdAt: now,
     updatedAt: now,
   },
+  {
+    id: "r-viewer",
+    name: "Viewer",
+    description:
+      "Solamente tiene permisos de visualización de datos sin capacidad de edición.",
+    hierarchyLevel: 11,
+    createdAt: now,
+    updatedAt: now,
+  },
 ];
