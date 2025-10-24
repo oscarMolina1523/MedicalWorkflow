@@ -23,17 +23,17 @@ export class UserMapper {
   }
 
   static updateEntity(
-    existing: User,
+    existing: UserResponse,
     dto: UserRequest,
     currentUser: string
-  ): User {
+  ): UserResponse {
     const now = new Date();
 
-    return new User({
+    return({
       ...existing, // mantiene id, createdAt, createdBy, etc.
       username: dto.username ?? existing.username,
       email: dto.email ?? existing.email,
-      password: dto.password ?? existing.password,
+      //password: dto.password ?? existing.password,
       roleId: dto.roleId ?? existing.roleId,
       active: dto.active ?? existing.active,
       departmentId: dto.departmentId ?? existing.departmentId,
