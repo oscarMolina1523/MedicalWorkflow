@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { UserRequest } from "../../Aplication.Endpoint/dtos/request/user.request";
+import { UserResponse } from "../../Aplication.Endpoint/dtos/response/user.response";
 dotenv.config();
 
 
@@ -38,7 +38,7 @@ export function validateToken(req: Request, res: Response, next: NextFunction) {
   });
 }
 
-export function decodeToken(req: Request): UserRequest {
+export function decodeToken(req: Request): UserResponse {
   const secret = process.env.SECRET;
   if (!secret) throw new Error("JWT SECRET is not defined");
 
@@ -49,6 +49,6 @@ export function decodeToken(req: Request): UserRequest {
     ? authHeader.slice(7)
     : authHeader;
 
-  const decoded = jwt.verify(token, secret) as UserRequest;
+  const decoded = jwt.verify(token, secret) as UserResponse;
   return decoded;
 }
