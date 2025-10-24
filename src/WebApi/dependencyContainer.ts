@@ -10,6 +10,7 @@ import { IUserRepository } from '../Domain.Endpoint/interfaces/repositories/user
 import { UserRepository } from '../Infrastructure.Endpoint/services/user.repository';
 import { IUserService } from '../Aplication.Endpoint/interfaces/userService.interface';
 import UserService from '../Aplication.Endpoint/services/user.service';
+import UserController from './controllers/user.controller';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -19,3 +20,4 @@ container.register<ISqlCommandOperationBuilder>('IOperationBuilder', { useClass:
 //user dependencies
 container.register<IUserRepository>('IUserRepository', { useClass: UserRepository });
 container.register<IUserService>('IUserService', { useClass: UserService });
+container.register<UserController>('UserController', { useClass: UserController });
