@@ -4,6 +4,7 @@ import User from "../../entities/user.model";
 export interface IUserRepository {
   getAll(): Promise<UserResponse[]>;
   getById(id: string): Promise<UserResponse | null>;
+  getByIdWithPassword(id: string): Promise<User | null>;
   getByEmail(email: string): Promise<User | null>;
   getByAreaId(areaId: string): Promise<UserResponse[]>
   create(user: User): Promise<void>;

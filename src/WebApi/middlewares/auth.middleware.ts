@@ -37,18 +37,3 @@ export function validateToken(req: Request, res: Response, next: NextFunction) {
     }
   });
 }
-
-export function decodeToken(req: Request): UserResponse {
-  const secret = process.env.SECRET;
-  if (!secret) throw new Error("JWT SECRET is not defined");
-
-  const authHeader = req.headers["authorization"];
-  if (!authHeader) throw new Error("No token provided");
-
-  const token = authHeader.startsWith("Bearer ")
-    ? authHeader.slice(7)
-    : authHeader;
-
-  const decoded = jwt.verify(token, secret) as UserResponse;
-  return decoded;
-}
