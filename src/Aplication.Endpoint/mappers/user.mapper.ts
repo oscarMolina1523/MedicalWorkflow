@@ -23,7 +23,7 @@ export class UserMapper {
   }
 
   static updateEntity(
-    existing: UserResponse,
+    existing: User,
     dto: UserRequest,
     currentUser: string
   ): User {
@@ -33,7 +33,7 @@ export class UserMapper {
       ...existing, // mantiene id, createdAt, createdBy, etc.
       username: dto.username ?? existing.username,
       email: dto.email ?? existing.email,
-      password: dto.password,
+      password: dto.password?.trim() ? dto.password : existing.password,
       roleId: dto.roleId ?? existing.roleId,
       active: dto.active ?? existing.active,
       departmentId: dto.departmentId ?? existing.departmentId,
