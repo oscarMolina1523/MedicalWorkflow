@@ -6,12 +6,21 @@ import { UserResponse } from "../dtos/response/user.response";
 import User from "../../Domain.Endpoint/entities/user.model";
 import { UserRequest } from "../dtos/request/user.request";
 import { UserMapper } from "../mappers/user.mapper";
+import { ITokenRepository } from "../../Domain.Endpoint/interfaces/repositories/tokenRepository.interface";
 
 @injectable()
 export default class UserService implements IUserService {
   private readonly _userRepository: IUserRepository;
-  constructor(@inject("IUserRepository") userRepository: IUserRepository) {
+  private readonly _tokenRepository: ITokenRepository;
+  constructor(@inject("IUserRepository") userRepository: IUserRepository, @inject("ITokenRepository") tokenRepository: ITokenRepository) {
     this._userRepository = userRepository;
+    this._tokenRepository = tokenRepository;
+  }
+
+  private getCurrentUser(token:string) {
+    const user = this._tokenRepository.decodeToken(token);
+    if (!user || !user.id) throw new Error("Invalid or missing token");
+    return user;
   }
 
   async getUsers(): Promise<UserResponse[]> {
@@ -26,15 +35,20 @@ export default class UserService implements IUserService {
     return await this._userRepository.getByEmail(email);
   }
 
-  async getByAreaId(areaId: string): Promise<UserResponse[]> {
-    return await this._userRepository.getByAreaId(areaId);
+  async getByAreaId(token: string): Promise<UserResponse[]> {
+    const currentUser = this.getCurrentUser(token);
+    if (!currentUser.departmentId) {
+      throw new Error("Department ID is required.");
+    }
+    return await this._userRepository.getByAreaId(currentUser.departmentId);
   }
 
   async addUser(
     user: UserRequest,
-    currentUserId: string
+    token: string
   ): Promise<ServiceResult<UserResponse>> {
-    const newUser = UserMapper.toEntity(user, currentUserId);
+    const currentUser = this.getCurrentUser(token);
+    const newUser = UserMapper.toEntity(user, currentUser.id);
     await this._userRepository.create(newUser);
 
     return { success: true, message: "User created", data: newUser };
@@ -43,15 +57,17 @@ export default class UserService implements IUserService {
   async updateUser(
     id: string,
     user: UserRequest,
-    currentUserId: string
+    token: string
   ): Promise<ServiceResult<UserResponse | null>> {
     const existing = await this._userRepository.getByIdWithPassword(id);
     if (!existing) {
       return { success: false, message: "User not found", data: null };
     }
 
+    const currentUser = this.getCurrentUser(token);
+
     // actualizar solo las propiedades necesarias
-    const updatedUser = UserMapper.updateEntity(existing, user, currentUserId);
+    const updatedUser = UserMapper.updateEntity(existing, user, currentUser.id);
     await this._userRepository.update(updatedUser);
 
     return { success: true, message: "User updated", data: updatedUser };
