@@ -45,7 +45,7 @@ export default class UserService implements IUserService {
     user: UserRequest,
     currentUserId: string
   ): Promise<ServiceResult<UserResponse | null>> {
-    const existing = await this._userRepository.getById(id);
+    const existing = await this._userRepository.getByIdWithPassword(id);
     if (!existing) {
       return { success: false, message: "User not found", data: null };
     }
@@ -54,7 +54,7 @@ export default class UserService implements IUserService {
     const updatedUser = UserMapper.updateEntity(existing, user, currentUserId);
     await this._userRepository.update(updatedUser);
 
-    return { success: true, message: "User updated", data: existing };
+    return { success: true, message: "User updated", data: updatedUser };
   }
 
   async deleteUser(id: string): Promise<{ success: boolean; message: string }> {
