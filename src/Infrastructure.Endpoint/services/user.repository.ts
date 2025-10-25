@@ -71,6 +71,31 @@ export class UserRepository implements IUserRepository {
     } as UserResponse;
   }
 
+  async getByIdWithPassword(id: string): Promise<User | null> {
+    const readCommand = this._operationBuilder
+      .Initialize(EntityType.User)
+      .WithOperation(SqlReadOperation.SelectById)
+      .WithId(id)
+      .BuildReader();
+
+    const row = await this._connection.executeScalar(readCommand);
+    if (!row) return null;
+
+    return {
+      id: row["ID"],
+      username: row["USERNAME"],
+      email: row["EMAIL"],
+      password: row["PASSWORD"],
+      roleId: row["ROLE_ID"],
+      active: row["AREA_ID"],
+      createdAt: row["CREATED_AT"],
+      updatedAt: row["UPDATED_AT"],
+      createdBy: row["CREATED_BY"],
+      updatedBy: row["UPDATED_BY"],
+      departmentId: row["DEPARTMENT_ID"],
+    };
+  }
+
   async getByEmail(email: string): Promise<User | null> {
     const builder = this._operationBuilder!.Initialize(
       EntityType.User
