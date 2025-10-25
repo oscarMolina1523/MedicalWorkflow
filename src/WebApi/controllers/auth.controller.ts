@@ -15,7 +15,7 @@ export default class AuthController {
     try {
       const data: UserRequest = req.body;
 
-      if (!data.email || !data.password || !data.departmentId) {
+      if (!data.email || !data.password) {
         res.status(400).json({ message: "Todos los campos son obligatorios" });
         return;
       }
@@ -36,12 +36,7 @@ export default class AuthController {
     try {
       const data: UserRequest = req.body;
 
-      if (
-        !data.username ||
-        !data.email ||
-        !data.password ||
-        !data.departmentId
-      ) {
+      if (!data.username || !data.email || !data.password) {
         res.status(400).json({ message: "Todos los campos son obligatorios" });
         return;
       }
