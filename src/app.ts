@@ -1,11 +1,11 @@
 import "reflect-metadata";
 import cors from "cors";
-import swaggerUI from "swagger-ui-express";
-import specs from "./WebApi/swagger/swagger";
 import "./WebApi/dependencyContainer";
 import express from "express";
 import userRoutes from "./WebApi/routes/user.routes";
 import { initializeDatabase } from "./Infrastructure.Endpoint/database/turso_db";
+import { OpenApiSpecification } from "./WebApi/documentation/openapi";
+import { apiReference } from "@scalar/express-api-reference";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,8 +14,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+app.use(
+  "/api-docs",
+  apiReference({
+    spec: {
+      content: OpenApiSpecification,
+    },
+  })
+);
+
 app.use("/users", userRoutes);
+
 
 async function startServer() {
   try {
