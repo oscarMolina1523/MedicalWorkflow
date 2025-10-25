@@ -66,7 +66,8 @@ export default class AuthService implements IAuthService {
     return {success:true, message: "Usuario registrado exitosamente", data: created.data };
   }
 
-  logout(): Promise<void> {
-    throw new Error("Method not implemented.");
+  logout(): string {
+    const result="Se ha cerrado sesión correctamente";
+    return result;
   }
 }

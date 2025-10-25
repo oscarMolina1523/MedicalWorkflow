@@ -8,5 +8,5 @@ export interface IAuthService {
 
   register(user: UserRequest): Promise<ServiceResult<UserResponse>>;
 
-  logout(): Promise<void>;
+  logout(): string;
 }
