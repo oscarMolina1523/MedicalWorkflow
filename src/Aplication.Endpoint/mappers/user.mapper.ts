@@ -18,7 +18,7 @@ export class UserMapper {
       updatedAt: now,
       createdBy: currentUser,
       updatedBy: currentUser,
-      departmentId: dto.departmentId,
+      departmentId: dto.departmentId ?? "d-admision",
     });
   }
 
@@ -26,14 +26,14 @@ export class UserMapper {
     existing: UserResponse,
     dto: UserRequest,
     currentUser: string
-  ): UserResponse {
+  ): User {
     const now = new Date();
 
     return({
       ...existing, // mantiene id, createdAt, createdBy, etc.
       username: dto.username ?? existing.username,
       email: dto.email ?? existing.email,
-      //password: dto.password ?? existing.password,
+      password: dto.password,
       roleId: dto.roleId ?? existing.roleId,
       active: dto.active ?? existing.active,
       departmentId: dto.departmentId ?? existing.departmentId,

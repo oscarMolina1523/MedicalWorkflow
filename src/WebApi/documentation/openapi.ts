@@ -1,3 +1,4 @@
+import { AuthPaths } from "./paths/auth.path";
 import { UserPaths } from "./paths/user.path";
 import { UserSchemas } from "./schemas/user.schema";
 
@@ -14,10 +15,23 @@ export const OpenApiSpecification = {
       description: "Local server",
     },
   ],
+  security: [
+    {
+      BearerAuth: [],
+    },
+  ],
   paths: {
     ...UserPaths,
+    ...AuthPaths,
   },
   components: {
+    securitySchemes: {
+      BearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
     schemas: {
       ...UserSchemas,
     },

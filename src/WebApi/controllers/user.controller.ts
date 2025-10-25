@@ -92,11 +92,9 @@ export default class UserController {
     const user =  this.getCurrentUser(req);
 
     if (
-      !userDto.departmentId ||
       !userDto.email ||
       !userDto.password ||
-      !userDto.username ||
-      !userDto.roleId
+      !userDto.username
     ) {
       return res.status(400).json({ message: "Missing required fields" });
     }
@@ -144,8 +142,8 @@ export default class UserController {
       } else {
         res.status(404).json({ message: "User not found" });
       }
-    } catch {
-      res.status(400).json({ message: "Failed to update user" });
+    } catch(error) {
+      res.status(400).json({ message: "Failed to update user"+error });
     }
   };
 

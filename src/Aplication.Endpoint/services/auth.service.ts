@@ -4,7 +4,7 @@ import { IAuthService } from "../interfaces/authService.interface";
 import { AuthResult } from "../utils/authResult.type";
 import { ServiceResult } from "../utils/serviceResult.type";
 import { IUserService } from "../interfaces/userService.interface";
-import bcrypt from "bcryptjs/umd/types";
+import bcrypt from "bcryptjs";
 import { ITokenRepository } from "../../Domain.Endpoint/interfaces/repositories/tokenRepository.interface";
 import { UserMapper } from "../mappers/user.mapper";
 import { UserRequest } from "../dtos/request/user.request";
@@ -66,7 +66,8 @@ export default class AuthService implements IAuthService {
     return {success:true, message: "Usuario registrado exitosamente", data: created.data };
   }
 
-  logout(): Promise<void> {
-    throw new Error("Method not implemented.");
+  logout(): string {
+    const result="Se ha cerrado sesión correctamente";
+    return result;
   }
 }

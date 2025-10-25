@@ -1,7 +1,7 @@
 export const UserSchemas = {
   UserRequest: {
     type: "object",
-    required: ["email", "password", "departmentId", "active"],
+    required: ["email", "password"],
     properties: {
       username: { type: "string" },
       email: { type: "string" },

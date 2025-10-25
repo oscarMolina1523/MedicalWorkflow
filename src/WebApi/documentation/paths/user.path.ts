@@ -3,6 +3,7 @@ export const UserPaths = {
     get: {
       summary: "Get all users",
       tags: ["Users"],
+      security: [{ BearerAuth: [] }],
       responses: {
         200: {
           description: "List of users",
@@ -28,6 +29,7 @@ export const UserPaths = {
           },
         },
       },
+      security: [{ BearerAuth: [] }],
       responses: {
         201: { description: "User created successfully" },
       },
@@ -40,6 +42,7 @@ export const UserPaths = {
       parameters: [
         { name: "id", in: "path", required: true, schema: { type: "string" } },
       ],
+      security: [{ BearerAuth: [] }],
       responses: {
         200: { description: "User found" },
         404: { description: "User not found" },
@@ -51,6 +54,7 @@ export const UserPaths = {
       parameters: [
         { name: "id", in: "path", required: true, schema: { type: "string" } },
       ],
+      security: [{ BearerAuth: [] }],
       requestBody: {
         required: true,
         content: {
@@ -69,6 +73,7 @@ export const UserPaths = {
       parameters: [
         { name: "id", in: "path", required: true, schema: { type: "string" } },
       ],
+      security: [{ BearerAuth: [] }],
       responses: {
         200: { description: "User deleted" },
       },
