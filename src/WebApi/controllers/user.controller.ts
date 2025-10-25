@@ -72,7 +72,7 @@ export default class UserController {
   // };
 
   getUserByAreaId = async (req: Request, res: Response) => {
-    const user =  this.getCurrentUser(req);
+    const user = this.getCurrentUser(req);
 
     if (!user.departmentId) {
       return res.status(400).json({ message: "Department ID is required." });
@@ -89,13 +89,9 @@ export default class UserController {
 
   addUser = async (req: Request, res: Response) => {
     const userDto: UserRequest = req.body;
-    const user =  this.getCurrentUser(req);
+    const user = this.getCurrentUser(req);
 
-    if (
-      !userDto.email ||
-      !userDto.password ||
-      !userDto.username
-    ) {
+    if (!userDto.email || !userDto.password || !userDto.username) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
@@ -118,7 +114,7 @@ export default class UserController {
   updateUser = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
     const updatedData: UserRequest = req.body;
-    const user =  this.getCurrentUser(req);
+    const user = this.getCurrentUser(req);
 
     if (!id) {
       return res.status(400).json({ message: "User ID is required." });
@@ -131,6 +127,10 @@ export default class UserController {
     }
 
     try {
+      if (updatedData.password && updatedData.password.trim() !== "") {
+        updatedData.password = await bcrypt.hash(updatedData.password, 10);
+      }
+
       const success = await this.service.updateUser(id, updatedData, user.id);
 
       if (success) {
@@ -142,8 +142,8 @@ export default class UserController {
       } else {
         res.status(404).json({ message: "User not found" });
       }
-    } catch(error) {
-      res.status(400).json({ message: "Failed to update user"+error });
+    } catch (error) {
+      res.status(400).json({ message: "Failed to update user" + error });
     }
   };
 
