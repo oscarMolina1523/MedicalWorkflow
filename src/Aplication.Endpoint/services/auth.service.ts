@@ -4,7 +4,7 @@ import { IAuthService } from "../interfaces/authService.interface";
 import { AuthResult } from "../utils/authResult.type";
 import { ServiceResult } from "../utils/serviceResult.type";
 import { IUserService } from "../interfaces/userService.interface";
-import bcrypt from "bcryptjs/umd/types";
+import bcrypt from "bcryptjs";
 import { ITokenRepository } from "../../Domain.Endpoint/interfaces/repositories/tokenRepository.interface";
 import { UserMapper } from "../mappers/user.mapper";
 import { UserRequest } from "../dtos/request/user.request";
