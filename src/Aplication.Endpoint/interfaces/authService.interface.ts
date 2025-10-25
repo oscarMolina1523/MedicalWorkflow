@@ -3,7 +3,7 @@ import { AuthResult } from "../utils/authResult.type";
 import { ServiceResult } from "../utils/serviceResult.type";
 
 export interface IAuthService {
-  login(): Promise<AuthResult<UserResponse>>;
+  login(email:string, password:string): Promise<AuthResult<UserResponse>>;
 
   register(): Promise<ServiceResult<UserResponse>>;
 
