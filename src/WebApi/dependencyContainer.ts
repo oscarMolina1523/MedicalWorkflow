@@ -12,7 +12,7 @@ import { IUserService } from '../Aplication.Endpoint/interfaces/userService.inte
 import UserService from '../Aplication.Endpoint/services/user.service';
 import UserController from './controllers/user.controller';
 import { ITokenRepository } from '../Domain.Endpoint/interfaces/repositories/tokenRepository.interface';
-import TokenRepository from '../Infrastructure.Endpoint/services/tokenService';
+import TokenRepository from '../Infrastructure.Endpoint/services/tokenRepository';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
