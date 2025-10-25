@@ -7,6 +7,7 @@ import authRoutes from "./WebApi/routes/auth.routes";
 import { initializeDatabase } from "./Infrastructure.Endpoint/database/turso_db";
 import { OpenApiSpecification } from "./WebApi/documentation/openapi";
 import { apiReference } from "@scalar/express-api-reference";
+import { validateToken } from "./WebApi/middlewares/auth.middleware";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,7 +26,7 @@ app.use(
 );
 
 app.use("/auth", authRoutes);
-app.use("/users", userRoutes);
+app.use("/users", validateToken, userRoutes);
 
 
 async function startServer() {
