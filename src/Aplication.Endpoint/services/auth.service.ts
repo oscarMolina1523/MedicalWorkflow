@@ -7,6 +7,7 @@ import { IUserService } from "../interfaces/userService.interface";
 import bcrypt from "bcryptjs/umd/types";
 import { ITokenRepository } from "../../Domain.Endpoint/interfaces/repositories/tokenRepository.interface";
 import { UserMapper } from "../mappers/user.mapper";
+import { UserRequest } from "../dtos/request/user.request";
 
 @injectable()
 export default class AuthService implements IAuthService {
@@ -42,9 +43,29 @@ export default class AuthService implements IAuthService {
     return { message: "Login exitoso", data: data, token };
   }
 
-  register(): Promise<ServiceResult<UserResponse>> {
-    throw new Error("Method not implemented.");
+  async register(user: UserRequest): Promise<ServiceResult<UserResponse>> {
+    const existing = await this._userService.getByEmail(user.email);
+    if (existing) {
+      return { success: false, message: "El correo ya está registrado" };
+    }
+
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+
+    const created = await this._userService.addUser(
+      {
+        ...user,
+        password: hashedPassword,
+      } as UserRequest,
+      "system"
+    );
+
+    if (!created.success || !created.data) {
+      return { success:false, message: "Error al registrar usuario" };
+    }
+
+    return {success:true, message: "Usuario registrado exitosamente", data: created.data };
   }
+
   logout(): Promise<void> {
     throw new Error("Method not implemented.");
   }
