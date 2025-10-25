@@ -328,6 +328,3 @@ export async function initializeDatabase(): Promise<void> {
     await db.close();
   }
 }
-
-// Ejecutar directamente si se llama como script
-initializeDatabase();
