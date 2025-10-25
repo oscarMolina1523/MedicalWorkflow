@@ -11,13 +11,23 @@ import { UserRepository } from '../Infrastructure.Endpoint/services/user.reposit
 import { IUserService } from '../Aplication.Endpoint/interfaces/userService.interface';
 import UserService from '../Aplication.Endpoint/services/user.service';
 import UserController from './controllers/user.controller';
+import { ITokenRepository } from '../Domain.Endpoint/interfaces/repositories/tokenRepository.interface';
+import TokenRepository from '../Infrastructure.Endpoint/services/tokenRepository';
+import { IAuthService } from '../Aplication.Endpoint/interfaces/authService.interface';
+import AuthService from '../Aplication.Endpoint/services/auth.service';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
 container.registerSingleton<IEntitiesService>('IEntityService', EntitiesService);
 container.register<ISqlCommandOperationBuilder>('IOperationBuilder', { useClass: SqlCommandOperationBuilder });
 
+//token dependencies
+container.register<ITokenRepository>('ITokenRepository', {useClass: TokenRepository});
+
 //user dependencies
 container.register<IUserRepository>('IUserRepository', { useClass: UserRepository });
 container.register<IUserService>('IUserService', { useClass: UserService });
 container.register<UserController>('UserController', { useClass: UserController });
+
+//auth dependencies
+container.register<IAuthService>('IAuthService', { useClass: AuthService });

@@ -3,7 +3,6 @@ import { UserRequest } from "../dtos/request/user.request";
 import { UserResponse } from "../dtos/response/user.response";
 import { ServiceResult } from "../utils/serviceResult.type";
 
-
 export interface IUserService {
   getUsers(): Promise<UserResponse[]>;
   getById(id: string): Promise<UserResponse | null>;
