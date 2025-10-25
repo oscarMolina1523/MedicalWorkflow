@@ -3,6 +3,7 @@ import cors from "cors";
 import "./WebApi/dependencyContainer";
 import express from "express";
 import userRoutes from "./WebApi/routes/user.routes";
+import authRoutes from "./WebApi/routes/auth.routes";
 import { initializeDatabase } from "./Infrastructure.Endpoint/database/turso_db";
 import { OpenApiSpecification } from "./WebApi/documentation/openapi";
 import { apiReference } from "@scalar/express-api-reference";
@@ -23,6 +24,7 @@ app.use(
   })
 );
 
+app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 
 
