@@ -2,7 +2,6 @@ import { inject, injectable } from "tsyringe";
 import { Request, Response } from "express";
 import { UserRequest } from "../../Aplication.Endpoint/dtos/request/user.request";
 import bcrypt from "bcryptjs";
-import { decodeToken } from "../middlewares/auth.middleware";
 import { IUserService } from "../../Aplication.Endpoint/interfaces/userService.interface";
 
 @injectable()
@@ -11,12 +10,6 @@ export default class UserController {
 
   constructor(@inject("IUserService") service: IUserService) {
     this.service = service;
-  }
-
-  private getCurrentUser(req: Request) {
-    const user = decodeToken(req);
-    if (!user || !user.id) throw new Error("Invalid or missing token");
-    return user;
   }
 
   getUsers = async (req: Request, res: Response) => {
@@ -72,14 +65,10 @@ export default class UserController {
   // };
 
   getUserByAreaId = async (req: Request, res: Response) => {
-    const user = this.getCurrentUser(req);
-
-    if (!user.departmentId) {
-      return res.status(400).json({ message: "Department ID is required." });
-    }
+    const token = req.headers["authorization"] || "";
 
     try {
-      const users = await this.service.getByAreaId(user.departmentId);
+      const users = await this.service.getByAreaId(token);
       res.status(200).json({ success: true, data: users });
     } catch (error) {
       console.log(error);
@@ -89,7 +78,7 @@ export default class UserController {
 
   addUser = async (req: Request, res: Response) => {
     const userDto: UserRequest = req.body;
-    const user = this.getCurrentUser(req);
+    const token = req.headers["authorization"] || "";
 
     if (!userDto.email || !userDto.password || !userDto.username) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -100,7 +89,7 @@ export default class UserController {
 
       userDto.password = passwordEncripted;
 
-      const response = await this.service.addUser(userDto, user.id);
+      const response = await this.service.addUser(userDto, token);
       res.status(201).json({
         success: response.success,
         message: response.message,
@@ -114,7 +103,7 @@ export default class UserController {
   updateUser = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
     const updatedData: UserRequest = req.body;
-    const user = this.getCurrentUser(req);
+    const token = req.headers["authorization"] || "";
 
     if (!id) {
       return res.status(400).json({ message: "User ID is required." });
@@ -131,7 +120,7 @@ export default class UserController {
         updatedData.password = await bcrypt.hash(updatedData.password, 10);
       }
 
-      const success = await this.service.updateUser(id, updatedData, user.id);
+      const success = await this.service.updateUser(id, updatedData, token);
 
       if (success) {
         res.status(200).json({
