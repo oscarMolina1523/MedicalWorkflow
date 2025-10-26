@@ -18,6 +18,8 @@ import AuthService from '../Aplication.Endpoint/services/auth.service';
 import AuthController from './controllers/auth.controller';
 import { IRoleRepository } from '../Domain.Endpoint/interfaces/repositories/roleRepository.interface';
 import RoleRepository from '../Infrastructure.Endpoint/services/role.repository';
+import { IRoleService } from '../Aplication.Endpoint/interfaces/roleService.interface';
+import RoleService from '../Aplication.Endpoint/services/role.service';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -38,3 +40,4 @@ container.register<AuthController>('AuthController', { useClass: AuthController 
 
 //role dependencies
 container.register<IRoleRepository>('IRoleRepository', { useClass: RoleRepository });
+container.register<IRoleService>("IRoleService", {useClass: RoleService});
