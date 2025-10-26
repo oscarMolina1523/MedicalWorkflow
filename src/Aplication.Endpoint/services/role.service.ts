@@ -43,7 +43,7 @@ export default class RoleService implements IRoleService {
 
     await this._roleRepository.update(updatedRole);
 
-    return { success: true, message: "Role updated", data: existing };
+    return { success: true, message: "Role updated", data:updatedRole };
   }
 
   async deleteRole(id: string): Promise<{ success: boolean; message: string }> {
