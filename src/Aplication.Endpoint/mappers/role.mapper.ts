@@ -15,4 +15,16 @@ export class RoleMapper {
       updatedAt: now,
     });
   }
+
+  static updateEntity(existing: Role, dto: RoleRequest): Role {
+    const now = new Date();
+
+    return new Role({
+      ...existing,
+      name: dto.name ?? existing.name,
+      description: dto.description ?? existing.description,
+      hierarchyLevel: dto.hierarchyLevel ?? existing.hierarchyLevel,
+      updatedAt: now,
+    });
+  }
 }

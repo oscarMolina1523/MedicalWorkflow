@@ -16,6 +16,11 @@ import TokenRepository from '../Infrastructure.Endpoint/services/tokenRepository
 import { IAuthService } from '../Aplication.Endpoint/interfaces/authService.interface';
 import AuthService from '../Aplication.Endpoint/services/auth.service';
 import AuthController from './controllers/auth.controller';
+import { IRoleRepository } from '../Domain.Endpoint/interfaces/repositories/roleRepository.interface';
+import RoleRepository from '../Infrastructure.Endpoint/services/role.repository';
+import { IRoleService } from '../Aplication.Endpoint/interfaces/roleService.interface';
+import RoleService from '../Aplication.Endpoint/services/role.service';
+import RoleController from './controllers/role.controller';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -33,3 +38,8 @@ container.register<UserController>('UserController', { useClass: UserController 
 //auth dependencies
 container.register<IAuthService>('IAuthService', { useClass: AuthService });
 container.register<AuthController>('AuthController', { useClass: AuthController });
+
+//role dependencies
+container.register<IRoleRepository>('IRoleRepository', { useClass: RoleRepository });
+container.register<IRoleService>("IRoleService", {useClass: RoleService});
+container.register<RoleController>("RoleController", {useClass: RoleController});
