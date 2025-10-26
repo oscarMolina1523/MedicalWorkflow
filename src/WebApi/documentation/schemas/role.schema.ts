@@ -21,7 +21,7 @@ export const RoleSchemas = {
     },
   },
 
-  RoleResponse: {
+  Role: {
     type: "object",
     required: ["id", "name", "description", "hierarchyLevel", "createdAt", "updatedAt"],
     properties: {

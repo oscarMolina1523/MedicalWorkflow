@@ -18,7 +18,7 @@ export const RolePaths = {
                   success: { type: "boolean", example: true },
                   data: {
                     type: "array",
-                    items: RoleSchemas.RoleResponse,
+                    items: RoleSchemas.Role,
                   },
                 },
               },
@@ -54,7 +54,7 @@ export const RolePaths = {
                 properties: {
                   success: { type: "boolean", example: true },
                   message: { type: "string", example: "Role created successfully" },
-                  status: RoleSchemas.RoleResponse,
+                  status: RoleSchemas.Role,
                 },
               },
             },
@@ -91,7 +91,7 @@ export const RolePaths = {
                 type: "object",
                 properties: {
                   success: { type: "boolean", example: true },
-                  data: RoleSchemas.RoleResponse,
+                  data: RoleSchemas.Role,
                 },
               },
             },
@@ -138,7 +138,7 @@ export const RolePaths = {
                 properties: {
                   success: { type: "boolean", example: true },
                   message: { type: "string", example: "Role updated successfully" },
-                  data: RoleSchemas.RoleResponse,
+                  data: RoleSchemas.Role,
                 },
               },
             },
