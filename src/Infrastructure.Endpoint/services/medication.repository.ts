@@ -1,6 +1,4 @@
 import { inject, injectable } from "tsyringe";
-import Role from "../../Domain.Endpoint/entities/role.model";
-import { IRoleRepository } from "../../Domain.Endpoint/interfaces/repositories/roleRepository.interface";
 import { ISqlCommandOperationBuilder } from "../interfaces/sqlCommandOperation.interface";
 import { ISingletonSqlConnection } from "../interfaces/database/dbConnection.interface";
 import { IMedicationRepository } from "../../Domain.Endpoint/interfaces/repositories/medicationRepository.interface";
