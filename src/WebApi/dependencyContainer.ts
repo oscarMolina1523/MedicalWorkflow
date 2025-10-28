@@ -27,6 +27,8 @@ import { IDepartmentRepository } from '../Domain.Endpoint/interfaces/repositorie
 import DepartmentRepository from '../Infrastructure.Endpoint/services/department.repository';
 import { IPatientRepository } from '../Domain.Endpoint/interfaces/repositories/patientRepository.interface';
 import PatientRepository from '../Infrastructure.Endpoint/services/patient.repository';
+import { IAppointmentRepository } from '../Domain.Endpoint/interfaces/repositories/appointmentRepository.interface';
+import AppointmentRepository from '../Infrastructure.Endpoint/services/appointment.repository';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -58,3 +60,6 @@ container.register<IDepartmentRepository>("IDepartmentRepository", {useClass:Dep
 
 //patient dependencies
 container.register<IPatientRepository>("IPatientRepository", {useClass: PatientRepository});
+
+//appointment dependencies
+container.register<IAppointmentRepository>("IAppointmentRepository", {useClass:AppointmentRepository});
