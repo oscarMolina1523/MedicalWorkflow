@@ -25,6 +25,16 @@ import { IMedicationRepository } from '../Domain.Endpoint/interfaces/repositorie
 import MedicationRepository from '../Infrastructure.Endpoint/services/medication.repository';
 import { IDepartmentRepository } from '../Domain.Endpoint/interfaces/repositories/departmentRepository.interface';
 import DepartmentRepository from '../Infrastructure.Endpoint/services/department.repository';
+import { IPatientRepository } from '../Domain.Endpoint/interfaces/repositories/patientRepository.interface';
+import PatientRepository from '../Infrastructure.Endpoint/services/patient.repository';
+import { IAppointmentRepository } from '../Domain.Endpoint/interfaces/repositories/appointmentRepository.interface';
+import AppointmentRepository from '../Infrastructure.Endpoint/services/appointment.repository';
+import { IAuditLogRepository } from '../Domain.Endpoint/interfaces/repositories/auditLogRepository.interface';
+import AuditLogRepository from '../Infrastructure.Endpoint/services/auditLog.repository';
+import { IMedicalServiceRepository } from '../Domain.Endpoint/interfaces/repositories/medicalService.interface';
+import MedicalServiceRepository from '../Infrastructure.Endpoint/services/medicalService.repository';
+import { IBillingRepository } from '../Domain.Endpoint/interfaces/repositories/billingRepository.interface';
+import BillingRepository from '../Infrastructure.Endpoint/services/billing.repository';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -52,4 +62,19 @@ container.register<RoleController>("RoleController", {useClass: RoleController})
 container.register<IMedicationRepository>("IMedicationRepository", {useClass: MedicationRepository});
 
 //department dependencies
-container.register<IDepartmentRepository>("IDepartmentRepository", {useClass:DepartmentRepository})
+container.register<IDepartmentRepository>("IDepartmentRepository", {useClass:DepartmentRepository});
+
+//patient dependencies
+container.register<IPatientRepository>("IPatientRepository", {useClass: PatientRepository});
+
+//appointment dependencies
+container.register<IAppointmentRepository>("IAppointmentRepository", {useClass:AppointmentRepository});
+
+//auditlog dependencies
+container.register<IAuditLogRepository>("IAuditLogRepository", {useClass: AuditLogRepository});
+
+//medicalService dependencies
+container.register<IMedicalServiceRepository>("IMedicalServiceRepository", {useClass:MedicalServiceRepository})
+
+//billing dependencies
+container.register<IBillingRepository>("IBillingRepository", {useClass:BillingRepository});
