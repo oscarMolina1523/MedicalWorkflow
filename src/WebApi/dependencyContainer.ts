@@ -23,6 +23,8 @@ import RoleService from '../Aplication.Endpoint/services/role.service';
 import RoleController from './controllers/role.controller';
 import { IMedicationRepository } from '../Domain.Endpoint/interfaces/repositories/medicationRepository.interface';
 import MedicationRepository from '../Infrastructure.Endpoint/services/medication.repository';
+import { IDepartmentRepository } from '../Domain.Endpoint/interfaces/repositories/departmentRepository.interface';
+import DepartmentRepository from '../Infrastructure.Endpoint/services/department.repository';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -48,3 +50,6 @@ container.register<RoleController>("RoleController", {useClass: RoleController})
 
 //medication dependencies
 container.register<IMedicationRepository>("IMedicationRepository", {useClass: MedicationRepository});
+
+//department dependencies
+container.register<IDepartmentRepository>("IDepartmentRepository", {useClass:DepartmentRepository})

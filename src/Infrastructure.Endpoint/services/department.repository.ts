@@ -1,8 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { ISqlCommandOperationBuilder } from "../interfaces/sqlCommandOperation.interface";
+import Department from "../../Domain.Endpoint/entities/department.model";
+import { IDepartmentRepository } from "../../Domain.Endpoint/interfaces/repositories/departmentRepository.interface";
 import { ISingletonSqlConnection } from "../interfaces/database/dbConnection.interface";
-import { IMedicationRepository } from "../../Domain.Endpoint/interfaces/repositories/medicationRepository.interface";
-import { Medication } from "../../Domain.Endpoint/entities/medication.model";
+import { ISqlCommandOperationBuilder } from "../interfaces/sqlCommandOperation.interface";
 import { EntityType } from "../utils/entityTypes";
 import {
   SqlReadOperation,
@@ -10,7 +10,7 @@ import {
 } from "../builders/sqlOperations.enum";
 
 @injectable()
-export default class MedicationRepository implements IMedicationRepository {
+export default class DepartmentRepository implements IDepartmentRepository {
   private readonly _operationBuilder: ISqlCommandOperationBuilder;
   private readonly _connection: ISingletonSqlConnection;
 
@@ -22,29 +22,29 @@ export default class MedicationRepository implements IMedicationRepository {
     this._connection = connection;
   }
 
-  async getAll(): Promise<Medication[]> {
+  async getAll(): Promise<Department[]> {
     const readCommand = this._operationBuilder
-      .Initialize(EntityType.Medication)
+      .Initialize(EntityType.Department)
       .WithOperation(SqlReadOperation.Select)
       .BuildReader();
     const rows = await this._connection.executeQuery(readCommand);
 
     return rows.map(
       (row) =>
-        new Medication({
+        new Department({
           id: row["ID"],
           name: row["NAME"],
           description: row["DESCRIPTION"],
-          expirationDate: row["EXPIRATION_DATE"],
-          unit: row["UNIT"],
-          active: row["ACTIVE"],
+          headId: row["HEAD_ID"],
+          createdAt: row["CREATED_AT"],
+          updatedAt: row["UPDATED_AT"],
         })
     );
   }
 
-  async getById(id: string): Promise<Medication | null> {
+  async getById(id: string): Promise<Department | null> {
     const readCommand = this._operationBuilder
-      .Initialize(EntityType.Medication)
+      .Initialize(EntityType.Department)
       .WithOperation(SqlReadOperation.SelectById)
       .WithId(id)
       .BuildReader();
@@ -52,37 +52,37 @@ export default class MedicationRepository implements IMedicationRepository {
     const row = await this._connection.executeScalar(readCommand);
     if (!row) return null;
 
-    return new Medication({
+    return new Department({
       id: row["ID"],
       name: row["NAME"],
       description: row["DESCRIPTION"],
-      expirationDate: row["EXPIRATION_DATE"],
-      unit: row["UNIT"],
-      active: row["ACTIVE"],
+      headId: row["HEAD_ID"],
+      createdAt: row["CREATED_AT"],
+      updatedAt: row["UPDATED_AT"],
     });
   }
 
-  async create(medication: Medication): Promise<void> {
+  async create(department: Department): Promise<void> {
     const writeCommand = this._operationBuilder
-      .From(EntityType.Medication, medication)
+      .From(EntityType.Department, department)
       .WithOperation(SqlWriteOperation.Create)
       .BuildWritter();
 
     await this._connection.executeNonQuery(writeCommand);
   }
 
-  async update(medication: Medication): Promise<void> {
+  async update(department: Department): Promise<void> {
     const writeCommand = this._operationBuilder
-      .From(EntityType.Medication, medication)
+      .From(EntityType.Department, department)
       .WithOperation(SqlWriteOperation.Update)
       .BuildWritter();
 
     await this._connection.executeNonQuery(writeCommand);
   }
 
-  async delete(medication: Medication): Promise<void> {
+  async delete(department: Department): Promise<void> {
     const writeCommand = this._operationBuilder
-      .From(EntityType.Medication, medication)
+      .From(EntityType.Department, department)
       .WithOperation(SqlWriteOperation.Delete)
       .BuildWritter();
 
