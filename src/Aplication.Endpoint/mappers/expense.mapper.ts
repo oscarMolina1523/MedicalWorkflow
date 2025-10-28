@@ -15,4 +15,19 @@ export class ExpenseMapper {
       createdAt: now,
     });
   }
+
+   static updateEntity(
+    existing: Expense,
+    dto: ExpenseRequest,
+  ): Expense {
+    const now = new Date();
+
+    return {
+      ...existing, // mantiene id, createdAt, createdBy, etc.
+      departmentId: dto.departmentId ?? existing.departmentId,
+      description: dto.description ?? existing.description,
+      category: dto.category ?? existing.category,
+      amount: dto.amount ?? existing.amount
+    };
+  }
 }
