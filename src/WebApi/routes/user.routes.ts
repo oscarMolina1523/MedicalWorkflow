@@ -7,6 +7,8 @@ const userController = container.resolve(UserController);
 
 router.get("/", userController.getUsers);
 
+router.get("/area", userController.getUserByAreaId);
+
 router.get("/:id", userController.getUserById);
 
 router.post("/", userController.addUser);
