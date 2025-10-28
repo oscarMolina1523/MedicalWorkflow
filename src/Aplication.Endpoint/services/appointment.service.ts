@@ -3,7 +3,7 @@ import Appointment from "../../Domain.Endpoint/entities/appointment.model";
 import { IAppointmentRepository } from "../../Domain.Endpoint/interfaces/repositories/appointmentRepository.interface";
 import { ITokenRepository } from "../../Domain.Endpoint/interfaces/repositories/tokenRepository.interface";
 import { AppointmentRequest } from "../dtos/request/appointment.request";
-import { IAppointmentService } from "../interfaces/appointment.interface";
+import { IAppointmentService } from "../interfaces/appointmentService.interface";
 import { ServiceResult } from "../utils/serviceResult.type";
 import { AppointmentMapper } from "../mappers/appointment.mapper";
 
