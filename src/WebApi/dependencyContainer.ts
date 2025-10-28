@@ -43,6 +43,8 @@ import { IDepartmentService } from '../Aplication.Endpoint/interfaces/department
 import DepartmentService from '../Aplication.Endpoint/services/department.service';
 import { IPatientService } from '../Aplication.Endpoint/interfaces/patientService.interface';
 import PatientService from '../Aplication.Endpoint/services/patient.service';
+import { IAppointmentService } from '../Aplication.Endpoint/interfaces/appointment.interface';
+import AppointmentService from '../Aplication.Endpoint/services/appointment.service';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -80,6 +82,7 @@ container.register<IPatientService>("IPatientService", {useClass: PatientService
 
 //appointment dependencies
 container.register<IAppointmentRepository>("IAppointmentRepository", {useClass:AppointmentRepository});
+container.register<IAppointmentService>("IAppointmentService", {useClass: AppointmentService});
 
 //auditlog dependencies
 container.register<IAuditLogRepository>("IAuditLogRepository", {useClass: AuditLogRepository});
