@@ -57,6 +57,7 @@ import { IBillingService } from '../Aplication.Endpoint/interfaces/billingServic
 import BillingService from '../Aplication.Endpoint/services/billing.service';
 import { IExpenseService } from '../Aplication.Endpoint/interfaces/expenseService.interface';
 import ExpenseService from '../Aplication.Endpoint/services/expense.service';
+import DepartmentController from './controllers/department.controller';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -87,6 +88,7 @@ container.register<IMedicationService>("IMedicationService", {useClass:Medicatio
 //department dependencies
 container.register<IDepartmentRepository>("IDepartmentRepository", {useClass:DepartmentRepository});
 container.register<IDepartmentService>("IDepartmentService", {useClass: DepartmentService});
+container.register<DepartmentController>("DepartmentController", {useClass: DepartmentController});
 
 //patient dependencies
 container.register<IPatientRepository>("IPatientRepository", {useClass: PatientRepository});

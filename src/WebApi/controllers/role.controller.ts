@@ -29,10 +29,10 @@ export default class RoleController {
     }
 
     try {
-      const task = await this.service.getById(roleId);
+      const role = await this.service.getById(roleId);
 
-      if (task) {
-        res.status(200).json({ success: true, data: task });
+      if (role) {
+        res.status(200).json({ success: true, data: role });
       } else {
         res.status(404).json({ message: "role not found" });
       }
