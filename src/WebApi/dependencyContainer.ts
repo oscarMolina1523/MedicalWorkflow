@@ -59,6 +59,7 @@ import { IExpenseService } from '../Aplication.Endpoint/interfaces/expenseServic
 import ExpenseService from '../Aplication.Endpoint/services/expense.service';
 import DepartmentController from './controllers/department.controller';
 import PatientController from './controllers/patient.controller';
+import AppointmentController from './controllers/appointment.controller';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -99,6 +100,7 @@ container.register<PatientController>("IPatientController", {useClass: PatientCo
 //appointment dependencies
 container.register<IAppointmentRepository>("IAppointmentRepository", {useClass:AppointmentRepository});
 container.register<IAppointmentService>("IAppointmentService", {useClass: AppointmentService});
+container.register<AppointmentController>("AppointmentController", {useClass:AppointmentController});
 
 //inventory dependencies
 container.register<IInventoryRepository>("IInventoryRepository", {useClass: InventoryRepository});
