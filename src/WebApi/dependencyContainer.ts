@@ -43,6 +43,20 @@ import { IDepartmentService } from '../Aplication.Endpoint/interfaces/department
 import DepartmentService from '../Aplication.Endpoint/services/department.service';
 import { IPatientService } from '../Aplication.Endpoint/interfaces/patientService.interface';
 import PatientService from '../Aplication.Endpoint/services/patient.service';
+import { IAppointmentService } from '../Aplication.Endpoint/interfaces/appointmentService.interface';
+import AppointmentService from '../Aplication.Endpoint/services/appointment.service';
+import { IInventoryRepository } from '../Domain.Endpoint/interfaces/repositories/inventoryRepository.interface';
+import InventoryRepository from '../Infrastructure.Endpoint/services/inventory.repository';
+import { IInventoryService } from '../Aplication.Endpoint/interfaces/inventoryService.interface';
+import InventoryService from '../Aplication.Endpoint/services/inventory.service';
+import { IAuditLogService } from '../Aplication.Endpoint/interfaces/auditLogService.interface';
+import AuditLogService from '../Aplication.Endpoint/services/auditLog.service';
+import { IMedicalServiceService } from '../Aplication.Endpoint/interfaces/medicalService.interface';
+import MedicalServiceService from '../Aplication.Endpoint/services/medicalService.service';
+import { IBillingService } from '../Aplication.Endpoint/interfaces/billingService.interface';
+import BillingService from '../Aplication.Endpoint/services/billing.service';
+import { IExpenseService } from '../Aplication.Endpoint/interfaces/expenseService.interface';
+import ExpenseService from '../Aplication.Endpoint/services/expense.service';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -80,15 +94,24 @@ container.register<IPatientService>("IPatientService", {useClass: PatientService
 
 //appointment dependencies
 container.register<IAppointmentRepository>("IAppointmentRepository", {useClass:AppointmentRepository});
+container.register<IAppointmentService>("IAppointmentService", {useClass: AppointmentService});
+
+//inventory dependencies
+container.register<IInventoryRepository>("IInventoryRepository", {useClass: InventoryRepository});
+container.register<IInventoryService>("IInventoryService", {useClass: InventoryService});
 
 //auditlog dependencies
 container.register<IAuditLogRepository>("IAuditLogRepository", {useClass: AuditLogRepository});
+container.register<IAuditLogService>("IAuditLogService", {useClass: AuditLogService});
 
 //medicalService dependencies
 container.register<IMedicalServiceRepository>("IMedicalServiceRepository", {useClass:MedicalServiceRepository})
+container.register<IMedicalServiceService>("IMedicalServiceService", {useClass: MedicalServiceService});
 
 //billing dependencies
 container.register<IBillingRepository>("IBillingRepository", {useClass:BillingRepository});
+container.register<IBillingService>("IBillingService", {useClass: BillingService});
 
 //expense dependencies
 container.register<IExpenseRepository>("IExpenseRepository", {useClass: ExpenseRepository});
+container.register<IExpenseService>("IExpenseService", {useClass: ExpenseService});

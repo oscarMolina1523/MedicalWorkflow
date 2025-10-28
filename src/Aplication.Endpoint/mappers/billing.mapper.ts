@@ -18,4 +18,22 @@ export class BillingMapper {
       paidAt: dto.paidAt,
     });
   }
+
+  static updateEntity(
+    existing: Billing,
+    dto: BillingRequest,
+  ): Billing {
+
+    return {
+      ...existing, // mantiene id, createdAt, createdBy, etc.
+      patientId: dto.patientId ?? existing.patientId,
+      appointmentId: dto.appointmentId ?? existing.appointmentId,
+      serviceId: dto.serviceId ?? existing.serviceId,
+      amount: dto.amount ?? existing.amount,
+      departmentId: dto.departmentId ?? existing.departmentId,
+      status: dto.status ?? existing.status,
+      paymentMethod: dto.paymentMethod ?? existing.paymentMethod,
+      paidAt: dto.paidAt ?? existing.paidAt,
+    };
+  }
 }

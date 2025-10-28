@@ -20,4 +20,24 @@ export class AppointmentMapper {
       updatedBy: currentUser,
     });
   }
+
+  static updateEntity(
+    existing: Appointment,
+    dto: AppointmentRequest,
+    currentUser: string
+  ): Appointment {
+    const now = new Date();
+
+    return {
+      ...existing, // mantiene id, createdAt, createdBy, etc.
+      patientId: dto.patientId.trim() ? dto.patientId: existing.patientId,
+      departmentId: dto.departmentId.trim() ? dto.departmentId: existing.departmentId,
+      doctorId: dto.doctorId.trim() ? dto.doctorId: existing.doctorId,
+      scheduledAt: dto.scheduledAt ?? existing.scheduledAt,
+      status: dto.status ?? existing.status,
+      notes: dto.notes.trim() ? dto.notes: existing.notes,
+      updatedAt: now,
+      updatedBy: currentUser,
+    };
+  }
 }
