@@ -2,7 +2,6 @@ import Role from "../../Domain.Endpoint/entities/role.model";
 import { RoleRequest } from "../dtos/request/role.request";
 import { ServiceResult } from "../utils/serviceResult.type";
 
-
 export interface IRoleService {
   getRoles(): Promise<Role[]>;
   getById(id: string): Promise<Role | null>;
