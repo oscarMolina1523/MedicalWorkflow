@@ -60,6 +60,7 @@ import ExpenseService from '../Aplication.Endpoint/services/expense.service';
 import DepartmentController from './controllers/department.controller';
 import PatientController from './controllers/patient.controller';
 import AppointmentController from './controllers/appointment.controller';
+import InventoryController from './controllers/inventory.controller';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -105,6 +106,7 @@ container.register<AppointmentController>("AppointmentController", {useClass:App
 //inventory dependencies
 container.register<IInventoryRepository>("IInventoryRepository", {useClass: InventoryRepository});
 container.register<IInventoryService>("IInventoryService", {useClass: InventoryService});
+container.register<InventoryController>("InventoryController", {useClass: InventoryController});
 
 //auditlog dependencies
 container.register<IAuditLogRepository>("IAuditLogRepository", {useClass: AuditLogRepository});
