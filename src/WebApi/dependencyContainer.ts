@@ -51,6 +51,8 @@ import { IInventoryService } from '../Aplication.Endpoint/interfaces/inventorySe
 import InventoryService from '../Aplication.Endpoint/services/inventory.service';
 import { IAuditLogService } from '../Aplication.Endpoint/interfaces/auditLogService.interface';
 import AuditLogService from '../Aplication.Endpoint/services/auditLog.service';
+import { IMedicalServiceService } from '../Aplication.Endpoint/interfaces/medicalService.interface';
+import MedicalServiceService from '../Aplication.Endpoint/services/medicalService.service';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -100,6 +102,7 @@ container.register<IAuditLogService>("IAuditLogService", {useClass: AuditLogServ
 
 //medicalService dependencies
 container.register<IMedicalServiceRepository>("IMedicalServiceRepository", {useClass:MedicalServiceRepository})
+container.register<IMedicalServiceService>("IMedicalServiceService", {useClass: MedicalServiceService});
 
 //billing dependencies
 container.register<IBillingRepository>("IBillingRepository", {useClass:BillingRepository});
