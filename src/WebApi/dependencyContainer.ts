@@ -55,6 +55,8 @@ import { IMedicalServiceService } from '../Aplication.Endpoint/interfaces/medica
 import MedicalServiceService from '../Aplication.Endpoint/services/medicalService.service';
 import { IBillingService } from '../Aplication.Endpoint/interfaces/billingService.interface';
 import BillingService from '../Aplication.Endpoint/services/billing.service';
+import { IExpenseService } from '../Aplication.Endpoint/interfaces/expenseService.interface';
+import ExpenseService from '../Aplication.Endpoint/services/expense.service';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -112,3 +114,4 @@ container.register<IBillingService>("IBillingService", {useClass: BillingService
 
 //expense dependencies
 container.register<IExpenseRepository>("IExpenseRepository", {useClass: ExpenseRepository});
+container.register<IExpenseService>("IExpenseService", {useClass: ExpenseService});
