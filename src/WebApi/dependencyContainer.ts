@@ -35,6 +35,8 @@ import { IMedicalServiceRepository } from '../Domain.Endpoint/interfaces/reposit
 import MedicalServiceRepository from '../Infrastructure.Endpoint/services/medicalService.repository';
 import { IBillingRepository } from '../Domain.Endpoint/interfaces/repositories/billingRepository.interface';
 import BillingRepository from '../Infrastructure.Endpoint/services/billing.repository';
+import { IExpenseRepository } from '../Domain.Endpoint/interfaces/repositories/expenseRepository.interface';
+import ExpenseRepository from '../Infrastructure.Endpoint/services/expense.repository';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -78,3 +80,6 @@ container.register<IMedicalServiceRepository>("IMedicalServiceRepository", {useC
 
 //billing dependencies
 container.register<IBillingRepository>("IBillingRepository", {useClass:BillingRepository});
+
+//expense dependencies
+container.register<IExpenseRepository>("IExpenseRepository", {useClass: ExpenseRepository});
