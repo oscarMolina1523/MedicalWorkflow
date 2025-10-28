@@ -37,6 +37,8 @@ import { IBillingRepository } from '../Domain.Endpoint/interfaces/repositories/b
 import BillingRepository from '../Infrastructure.Endpoint/services/billing.repository';
 import { IExpenseRepository } from '../Domain.Endpoint/interfaces/repositories/expenseRepository.interface';
 import ExpenseRepository from '../Infrastructure.Endpoint/services/expense.repository';
+import { IMedicationService } from '../Aplication.Endpoint/interfaces/medicationService.interface';
+import MedicationService from '../Aplication.Endpoint/services/medication.service';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -62,6 +64,7 @@ container.register<RoleController>("RoleController", {useClass: RoleController})
 
 //medication dependencies
 container.register<IMedicationRepository>("IMedicationRepository", {useClass: MedicationRepository});
+container.register<IMedicationService>("IMedicationService", {useClass:MedicationService});
 
 //department dependencies
 container.register<IDepartmentRepository>("IDepartmentRepository", {useClass:DepartmentRepository});
