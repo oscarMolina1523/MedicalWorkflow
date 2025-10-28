@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import Patient from "../../Domain.Endpoint/entities/patient.model";
-import { IPatientRepository } from "../../Domain.Endpoint/interfaces/repositories/patientRepository.interface";
+import Appointment from "../../Domain.Endpoint/entities/appointment.model";
+import { IAppointmentRepository } from "../../Domain.Endpoint/interfaces/repositories/appointmentRepository.interface";
 import { ISqlCommandOperationBuilder } from "../interfaces/sqlCommandOperation.interface";
 import { ISingletonSqlConnection } from "../interfaces/database/dbConnection.interface";
 import { EntityType } from "../utils/entityTypes";
@@ -10,7 +10,7 @@ import {
 } from "../builders/sqlOperations.enum";
 
 @injectable()
-export default class PatientRepository implements IPatientRepository {
+export default class AppointmentRepository implements IAppointmentRepository {
   private readonly _operationBuilder: ISqlCommandOperationBuilder;
   private readonly _connection: ISingletonSqlConnection;
 
@@ -22,23 +22,23 @@ export default class PatientRepository implements IPatientRepository {
     this._connection = connection;
   }
 
-  async getAll(): Promise<Patient[]> {
+  async getAll(): Promise<Appointment[]> {
     const readCommand = this._operationBuilder
-      .Initialize(EntityType.Patient)
+      .Initialize(EntityType.Appointment)
       .WithOperation(SqlReadOperation.Select)
       .BuildReader();
     const rows = await this._connection.executeQuery(readCommand);
 
     return rows.map(
       (row) =>
-        new Patient({
+        new Appointment({
           id: row["ID"],
-          firstName: row["FIRST_NAME"],
-          lastName: row["LAST_NAME"],
-          birthDate: row["BIRTH_DATE"],
-          gender: row["GENDER"],
+          patientId: row["PATIENT_ID"],
           departmentId: row["DEPARTMENT_ID"],
-          medicalHistory: row["MEDICAL_HISTORY"],
+          doctorId: row["DOCTOR_ID"],
+          scheduledAt: row["SCHEDULED_AT"],
+          status: row["STATUS"],
+          notes: row["NOTES"],
           createdAt: row["CREATED_AT"],
           updatedAt: row["UPDATED_AT"],
           createdBy: row["CREATED_BY"],
@@ -47,9 +47,9 @@ export default class PatientRepository implements IPatientRepository {
     );
   }
 
-  async getById(id: string): Promise<Patient | null> {
+  async getById(id: string): Promise<Appointment | null> {
     const readCommand = this._operationBuilder
-      .Initialize(EntityType.Patient)
+      .Initialize(EntityType.Appointment)
       .WithOperation(SqlReadOperation.SelectById)
       .WithId(id)
       .BuildReader();
@@ -57,14 +57,14 @@ export default class PatientRepository implements IPatientRepository {
     const row = await this._connection.executeScalar(readCommand);
     if (!row) return null;
 
-    return new Patient({
+    return new Appointment({
       id: row["ID"],
-      firstName: row["FIRST_NAME"],
-      lastName: row["LAST_NAME"],
-      birthDate: row["BIRTH_DATE"],
-      gender: row["GENDER"],
+      patientId: row["PATIENT_ID"],
       departmentId: row["DEPARTMENT_ID"],
-      medicalHistory: row["MEDICAL_HISTORY"],
+      doctorId: row["DOCTOR_ID"],
+      scheduledAt: row["SCHEDULED_AT"],
+      status: row["STATUS"],
+      notes: row["NOTES"],
       createdAt: row["CREATED_AT"],
       updatedAt: row["UPDATED_AT"],
       createdBy: row["CREATED_BY"],
@@ -72,9 +72,9 @@ export default class PatientRepository implements IPatientRepository {
     });
   }
 
-  async getByAreaId(areaId: string): Promise<Patient[]> {
+  async getByAreaId(areaId: string): Promise<Appointment[]> {
     const builder = this._operationBuilder
-      .Initialize(EntityType.Patient)
+      .Initialize(EntityType.Appointment)
       .WithOperation(SqlReadOperation.SelectByField);
 
     if (!builder.WithField) {
@@ -90,41 +90,41 @@ export default class PatientRepository implements IPatientRepository {
       (row) =>
         ({
           id: row["ID"],
-          firstName: row["FIRST_NAME"],
-          lastName: row["LAST_NAME"],
-          birthDate: row["BIRTH_DATE"],
-          gender: row["GENDER"],
+          patientId: row["PATIENT_ID"],
           departmentId: row["DEPARTMENT_ID"],
-          medicalHistory: row["MEDICAL_HISTORY"],
+          doctorId: row["DOCTOR_ID"],
+          scheduledAt: row["SCHEDULED_AT"],
+          status: row["STATUS"],
+          notes: row["NOTES"],
           createdAt: row["CREATED_AT"],
           updatedAt: row["UPDATED_AT"],
           createdBy: row["CREATED_BY"],
           updatedBy: row["UPDATED_BY"],
-        } as Patient)
+        } as Appointment)
     );
   }
 
-  async create(patient: Patient): Promise<void> {
+  async create(appointment: Appointment): Promise<void> {
     const writeCommand = this._operationBuilder
-      .From(EntityType.Patient, patient)
+      .From(EntityType.Appointment, appointment)
       .WithOperation(SqlWriteOperation.Create)
       .BuildWritter();
 
     await this._connection.executeNonQuery(writeCommand);
   }
 
-  async update(patient: Patient): Promise<void> {
+  async update(appointment: Appointment): Promise<void> {
     const writeCommand = this._operationBuilder
-      .From(EntityType.Patient, patient)
+      .From(EntityType.Appointment, appointment)
       .WithOperation(SqlWriteOperation.Update)
       .BuildWritter();
 
     await this._connection.executeNonQuery(writeCommand);
   }
 
-  async delete(patient: Patient): Promise<void> {
+  async delete(appointment: Appointment): Promise<void> {
     const writeCommand = this._operationBuilder
-      .From(EntityType.Patient, patient)
+      .From(EntityType.Appointment, appointment)
       .WithOperation(SqlWriteOperation.Delete)
       .BuildWritter();
 
