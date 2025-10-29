@@ -15,7 +15,7 @@ export class BillingMapper {
       status: dto.status,
       paymentMethod: dto.paymentMethod,
       createdAt: now,
-      paidAt: dto.paidAt,
+      paidAt: now,
     });
   }
 

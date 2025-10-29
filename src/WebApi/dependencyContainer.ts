@@ -57,6 +57,14 @@ import { IBillingService } from '../Aplication.Endpoint/interfaces/billingServic
 import BillingService from '../Aplication.Endpoint/services/billing.service';
 import { IExpenseService } from '../Aplication.Endpoint/interfaces/expenseService.interface';
 import ExpenseService from '../Aplication.Endpoint/services/expense.service';
+import DepartmentController from './controllers/department.controller';
+import PatientController from './controllers/patient.controller';
+import AppointmentController from './controllers/appointment.controller';
+import InventoryController from './controllers/inventory.controller';
+import AuditLogController from './controllers/auditLog.controller';
+import MedicalServiceController from './controllers/medicalService.controller';
+import BillingController from './controllers/billing.controller';
+import ExpenseController from './controllers/expense.controller';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -87,31 +95,39 @@ container.register<IMedicationService>("IMedicationService", {useClass:Medicatio
 //department dependencies
 container.register<IDepartmentRepository>("IDepartmentRepository", {useClass:DepartmentRepository});
 container.register<IDepartmentService>("IDepartmentService", {useClass: DepartmentService});
+container.register<DepartmentController>("DepartmentController", {useClass: DepartmentController});
 
 //patient dependencies
 container.register<IPatientRepository>("IPatientRepository", {useClass: PatientRepository});
 container.register<IPatientService>("IPatientService", {useClass: PatientService});
+container.register<PatientController>("IPatientController", {useClass: PatientController});
 
 //appointment dependencies
 container.register<IAppointmentRepository>("IAppointmentRepository", {useClass:AppointmentRepository});
 container.register<IAppointmentService>("IAppointmentService", {useClass: AppointmentService});
+container.register<AppointmentController>("AppointmentController", {useClass:AppointmentController});
 
 //inventory dependencies
 container.register<IInventoryRepository>("IInventoryRepository", {useClass: InventoryRepository});
 container.register<IInventoryService>("IInventoryService", {useClass: InventoryService});
+container.register<InventoryController>("InventoryController", {useClass: InventoryController});
 
 //auditlog dependencies
 container.register<IAuditLogRepository>("IAuditLogRepository", {useClass: AuditLogRepository});
 container.register<IAuditLogService>("IAuditLogService", {useClass: AuditLogService});
+container.register<AuditLogController>("AuditLogController", {useClass: AuditLogController});
 
 //medicalService dependencies
 container.register<IMedicalServiceRepository>("IMedicalServiceRepository", {useClass:MedicalServiceRepository})
 container.register<IMedicalServiceService>("IMedicalServiceService", {useClass: MedicalServiceService});
+container.register<MedicalServiceController>("MedicalController", {useClass: MedicalServiceController})
 
 //billing dependencies
 container.register<IBillingRepository>("IBillingRepository", {useClass:BillingRepository});
 container.register<IBillingService>("IBillingService", {useClass: BillingService});
+container.register<BillingController>("BillingController", {useClass: BillingController});
 
 //expense dependencies
 container.register<IExpenseRepository>("IExpenseRepository", {useClass: ExpenseRepository});
 container.register<IExpenseService>("IExpenseService", {useClass: ExpenseService});
+container.register<ExpenseController>("ExpenseController", {useClass: ExpenseController});
