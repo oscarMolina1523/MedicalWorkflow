@@ -1,4 +1,13 @@
+import { AppointmentPaths } from "./paths/appointment.path";
+import { AuditLogPaths } from "./paths/auditLog.path";
 import { AuthPaths } from "./paths/auth.path";
+import { BillingPaths } from "./paths/billing.path";
+import { DepartmentPaths } from "./paths/department.path";
+import { ExpensePaths } from "./paths/expense.path";
+import { InventoryPaths } from "./paths/inventory.path";
+import { MedicalServicePaths } from "./paths/medicalService.path";
+import { MedicationPaths } from "./paths/medication.path";
+import { PatientPaths } from "./paths/patient.path";
 import { RolePaths } from "./paths/role.path";
 import { UserPaths } from "./paths/user.path";
 import { AppointmentSchemas } from "./schemas/appointment.schema";
@@ -35,6 +44,15 @@ export const OpenApiSpecification = {
     ...UserPaths,
     ...AuthPaths,
     ...RolePaths,
+    ...MedicationPaths,
+    ...DepartmentPaths,
+    ...PatientPaths,
+    ...AppointmentPaths,
+    ...InventoryPaths,
+    ...AuditLogPaths,
+    ...MedicalServicePaths,
+    ...BillingPaths,
+    ...ExpensePaths
   },
   components: {
     securitySchemes: {
