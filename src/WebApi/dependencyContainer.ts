@@ -62,6 +62,7 @@ import PatientController from './controllers/patient.controller';
 import AppointmentController from './controllers/appointment.controller';
 import InventoryController from './controllers/inventory.controller';
 import AuditLogController from './controllers/auditLog.controller';
+import MedicalServiceController from './controllers/medicalService.controller';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -117,6 +118,7 @@ container.register<AuditLogController>("AuditLogController", {useClass: AuditLog
 //medicalService dependencies
 container.register<IMedicalServiceRepository>("IMedicalServiceRepository", {useClass:MedicalServiceRepository})
 container.register<IMedicalServiceService>("IMedicalServiceService", {useClass: MedicalServiceService});
+container.register<MedicalServiceController>("MedicalController", {useClass: MedicalServiceController})
 
 //billing dependencies
 container.register<IBillingRepository>("IBillingRepository", {useClass:BillingRepository});
