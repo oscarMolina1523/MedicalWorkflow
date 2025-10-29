@@ -10,6 +10,7 @@ import patientRoutes from "./WebApi/routes/patient.routes";
 import appointmentRoutes from "./WebApi/routes/appointment.routes";
 import inventoryRoutes from "./WebApi/routes/inventory.routes";
 import auditLogRoutes from "./WebApi/routes/auditLog.routes";
+import medicalServiceRoutes from "./WebApi/routes/medicalService.routes";
 import { initializeDatabase } from "./Infrastructure.Endpoint/database/turso_db";
 import { OpenApiSpecification } from "./WebApi/documentation/openapi";
 import { apiReference } from "@scalar/express-api-reference";
@@ -39,6 +40,7 @@ app.use("/patients", validateToken, patientRoutes);
 app.use("/appointments", validateToken, appointmentRoutes);
 app.use("/inventories", validateToken, inventoryRoutes);
 app.use("/logs", validateToken, auditLogRoutes);
+app.use("/services", validateToken, medicalServiceRoutes);
 
 async function startServer() {
   try {
