@@ -13,6 +13,7 @@ import auditLogRoutes from "./WebApi/routes/auditLog.routes";
 import medicalServiceRoutes from "./WebApi/routes/medicalService.routes";
 import billingRoutes from "./WebApi/routes/billing.routes";
 import expenseRoutes from "./WebApi/routes/expense.routes";
+import medicationRoutes from "./WebApi/routes/medication.routes";
 import { initializeDatabase } from "./Infrastructure.Endpoint/database/turso_db";
 import { OpenApiSpecification } from "./WebApi/documentation/openapi";
 import { apiReference } from "@scalar/express-api-reference";
@@ -45,6 +46,7 @@ app.use("/logs", validateToken, auditLogRoutes);
 app.use("/services", validateToken, medicalServiceRoutes);
 app.use("/billings", validateToken, billingRoutes);
 app.use("/expenses", validateToken, expenseRoutes);
+app.use("/medications", validateToken, medicationRoutes);
 
 async function startServer() {
   try {

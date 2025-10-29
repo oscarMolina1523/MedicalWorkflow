@@ -62,7 +62,8 @@ export default class BillingController {
       !billingDto.patientId ||
       !billingDto.serviceId ||
       !billingDto.paymentMethod ||
-      !billingDto.amount
+      !billingDto.status ||
+      !billingDto.amount 
     ) {
       return res.status(400).json({ message: "Missing required fields" });
     }

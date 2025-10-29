@@ -3,4 +3,6 @@ export enum Action {
   UPDATE = "update",
   DELETE = "delete",
   VIEW = "view",
+  LOGIN= "login",
+  LOGOUT= "logout"
 }
