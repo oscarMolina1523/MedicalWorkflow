@@ -1,6 +1,15 @@
 import { AuthPaths } from "./paths/auth.path";
 import { RolePaths } from "./paths/role.path";
 import { UserPaths } from "./paths/user.path";
+import { AppointmentSchemas } from "./schemas/appointment.schema";
+import { AuditLogSchemas } from "./schemas/auditLog.schema";
+import { BillingSchemas } from "./schemas/billing.schema";
+import { DepartmentSchemas } from "./schemas/department.schema";
+import { ExpenseSchemas } from "./schemas/expense.schema";
+import { InventorySchemas } from "./schemas/inventory.schema";
+import { MedicalServiceSchemas } from "./schemas/medicalService.schema";
+import { MedicationSchemas } from "./schemas/medication.schema";
+import { PatientSchemas } from "./schemas/patient.schema";
 import { RoleSchemas } from "./schemas/role.schema";
 import { UserSchemas } from "./schemas/user.schema";
 
@@ -38,6 +47,15 @@ export const OpenApiSpecification = {
     schemas: {
       ...UserSchemas,
       ...RoleSchemas,
+      ...MedicationSchemas,
+      ...DepartmentSchemas,
+      ...PatientSchemas,
+      ...AppointmentSchemas,
+      ...InventorySchemas,
+      ...AuditLogSchemas,
+      ...MedicalServiceSchemas,
+      ...BillingSchemas,
+      ...ExpenseSchemas
     },
   },
 };
