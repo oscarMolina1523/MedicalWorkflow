@@ -12,5 +12,5 @@ export interface IPatientService {
     patient: PatientRequest,
     token:string
   ): Promise<ServiceResult<Patient | null>>;
-  deletePatient(id: string): Promise<{ success: boolean; message: string }>;
+  deletePatient(id: string, token:string): Promise<{ success: boolean; message: string }>;
 }
