@@ -138,12 +138,14 @@ export default class UserController {
 
   deleteUser = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
+    const token = req.headers["authorization"] || "";
+
     if (!id) {
       return res.status(400).json({ message: "User ID is required." });
     }
 
     try {
-      const result = await this.service.deleteUser(id);
+      const result = await this.service.deleteUser(id, token);
 
       if (result) {
         res.status(200).json({
