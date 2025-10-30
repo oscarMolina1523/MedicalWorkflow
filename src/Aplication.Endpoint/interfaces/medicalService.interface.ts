@@ -8,10 +8,12 @@ export interface IMedicalServiceService {
   getByAreaId(token: string): Promise<MedicalService[]>;
   addMedicalService(
     medicalService: MedicalServiceRequest,
+    token:string
   ): Promise<ServiceResult<MedicalService>>;
   updateMedicalService(
     id: string,
     medicalService: MedicalServiceRequest,
+    token:string
   ): Promise<ServiceResult<MedicalService | null>>;
-  deleteMedicalService(id: string): Promise<{ success: boolean; message: string }>;
+  deleteMedicalService(id: string, token:string): Promise<{ success: boolean; message: string }>;
 }

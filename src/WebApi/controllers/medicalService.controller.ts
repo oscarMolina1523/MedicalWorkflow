@@ -61,6 +61,7 @@ export default class MedicalServiceController {
 
   addMedicalService = async (req: Request, res: Response) => {
     const medicalServiceDto: MedicalServiceRequest = req.body;
+    const token = req.headers["authorization"] || "";
 
     if (
       !medicalServiceDto.name ||
@@ -72,7 +73,7 @@ export default class MedicalServiceController {
     }
 
     try {
-      const response = await this.service.addMedicalService(medicalServiceDto);
+      const response = await this.service.addMedicalService(medicalServiceDto, token);
       res.status(201).json({
         success: response.success,
         message: response.message,
@@ -86,6 +87,7 @@ export default class MedicalServiceController {
   updateMedicalService = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
     const updatedData: MedicalServiceRequest = req.body;
+    const token = req.headers["authorization"] || "";
 
     if (!id) {
       return res
@@ -100,7 +102,7 @@ export default class MedicalServiceController {
     }
 
     try {
-      const success = await this.service.updateMedicalService(id, updatedData);
+      const success = await this.service.updateMedicalService(id, updatedData, token);
 
       if (success) {
         res.status(200).json({
@@ -118,12 +120,14 @@ export default class MedicalServiceController {
 
   deleteMedicalService = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
+    const token = req.headers["authorization"] || "";
+
     if (!id) {
       return res.status(400).json({ message: "Medical service ID is required." });
     }
 
     try {
-      const result = await this.service.deleteMedicalService(id);
+      const result = await this.service.deleteMedicalService(id, token);
 
       if (result) {
         res.status(200).json({
