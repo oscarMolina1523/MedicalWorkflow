@@ -66,6 +66,11 @@ import MedicalServiceController from './controllers/medicalService.controller';
 import BillingController from './controllers/billing.controller';
 import ExpenseController from './controllers/expense.controller';
 import MedicationController from './controllers/medicationController';
+import { IKpiRepository } from '../Domain.Endpoint/interfaces/repositories/kpiRepository.interface';
+import KpiRepository from '../Infrastructure.Endpoint/services/kpi.repository';
+import { IKpiService } from '../Aplication.Endpoint/interfaces/kpiService.interface';
+import KpiService from '../Aplication.Endpoint/services/kpi.service';
+import KpiController from './controllers/kpi.controller';
 
 //builder, database connection and entity service
 container.registerSingleton<ISingletonSqlConnection>('ISingletonSqlConnection', SingletonSqlConnection);
@@ -133,3 +138,8 @@ container.register<BillingController>("BillingController", {useClass: BillingCon
 container.register<IExpenseRepository>("IExpenseRepository", {useClass: ExpenseRepository});
 container.register<IExpenseService>("IExpenseService", {useClass: ExpenseService});
 container.register<ExpenseController>("ExpenseController", {useClass: ExpenseController});
+
+//kpi dependencies
+container.register<IKpiRepository>("IKpiRepository", {useClass: KpiRepository});
+container.register<IKpiService>("IKpiService", {useClass: KpiService});
+container.register<KpiController>("KpiController", {useClass: KpiController});

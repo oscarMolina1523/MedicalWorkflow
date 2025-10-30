@@ -10,7 +10,6 @@ import { inventoryData } from "../data/inventory.data";
 import { billingData } from "../data/billing.data";
 import { expenseData } from "../data/expense.data";
 
-
 const dbUrl = process.env.TURSO_DB_URL || "not-found";
 const token = process.env.TURSO_DB_AUTH_TOKEN || "not-found";
 
@@ -35,7 +34,14 @@ export async function initializeDatabase(): Promise<void> {
     for (const role of roleData) {
       await db.execute(
         `INSERT OR IGNORE INTO ROLES (ID, NAME, DESCRIPTION, HIERARCHY_LEVEL, CREATED_AT, UPDATED_AT) VALUES (?, ?, ?, ?, ?, ?)`,
-        [role.id, role.name, role.description, role.hierarchyLevel, role.createdAt.toISOString(), role.updatedAt.toISOString()]
+        [
+          role.id,
+          role.name,
+          role.description,
+          role.hierarchyLevel,
+          role.createdAt.toISOString(),
+          role.updatedAt.toISOString(),
+        ]
       );
     }
     console.log("✅ ROLES insertados.");
@@ -57,7 +63,14 @@ export async function initializeDatabase(): Promise<void> {
     for (const dept of departmentData) {
       await db.execute(
         `INSERT OR IGNORE INTO DEPARTMENTS (ID, NAME, DESCRIPTION, HEAD_ID, CREATED_AT, UPDATED_AT) VALUES (?, ?, ?, ?, ?, ?)`,
-        [dept.id, dept.name, dept.description, dept.headId, dept.createdAt.toISOString(), dept.updatedAt.toISOString()]
+        [
+          dept.id,
+          dept.name,
+          dept.description,
+          dept.headId,
+          dept.createdAt.toISOString(),
+          dept.updatedAt.toISOString(),
+        ]
       );
     }
     console.log("✅ DEPARTMENTS insertados.");
@@ -118,7 +131,14 @@ export async function initializeDatabase(): Promise<void> {
     for (const med of medicationData) {
       await db.execute(
         `INSERT OR IGNORE INTO MEDICATIONS (ID, NAME, DESCRIPTION, EXPIRATION_DATE, UNIT, ACTIVE) VALUES (?, ?, ?, ?, ?, ?)`,
-        [med.id, med.name, med.description, med.expirationDate?.toISOString() ?? null, med.unit, med.active ? 1 : 0]
+        [
+          med.id,
+          med.name,
+          med.description,
+          med.expirationDate?.toISOString() ?? null,
+          med.unit,
+          med.active ? 1 : 0,
+        ]
       );
     }
     console.log("✅ MEDICATIONS insertados.");
@@ -139,7 +159,13 @@ export async function initializeDatabase(): Promise<void> {
     for (const service of medicalServiceData) {
       await db.execute(
         `INSERT OR IGNORE INTO SERVICES (ID, NAME, DEPARTMENT_ID, BASE_COST, ACTIVE) VALUES (?, ?, ?, ?, ?)`,
-        [service.id, service.name, service.departmentId, service.baseCost, service.active ? 1 : 0]
+        [
+          service.id,
+          service.name,
+          service.departmentId,
+          service.baseCost,
+          service.active ? 1 : 0,
+        ]
       );
     }
     console.log("✅ SERVICES insertados.");
@@ -335,6 +361,123 @@ export async function initializeDatabase(): Promise<void> {
       );
     `);
     console.log("✅ Tabla KPI creada (sin datos).");
+
+    // TRIGGERS: KPIs automáticos (globales, sin departamento)
+    // ---------------------------
+
+    // 📅 Diario
+    await db.execute(`
+      CREATE TRIGGER IF NOT EXISTS trg_kpi_daily
+      AFTER INSERT ON BILLING
+      BEGIN
+        DELETE FROM KPI
+        WHERE NAME='DAILY_PROFIT'
+          AND METRIC_DATE=DATE(NEW.PAID_AT);
+
+        INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
+        VALUES (
+          LOWER(HEX(RANDOMBLOB(16))),
+          'DAILY_PROFIT',
+          (
+            (SELECT IFNULL(SUM(B.AMOUNT),0) FROM BILLING B WHERE DATE(B.PAID_AT)=DATE(NEW.PAID_AT))
+            -
+            (SELECT IFNULL(SUM(E.AMOUNT),0) FROM EXPENSES E WHERE DATE(E.CREATED_AT)=DATE(NEW.PAID_AT))
+          ),
+          DATE(NEW.PAID_AT),
+          DATETIME('now'),
+          'system'
+        );
+      END;
+    `);
+
+    // 📅 Semanal
+    await db.execute(`
+      CREATE TRIGGER IF NOT EXISTS trg_kpi_weekly
+      AFTER INSERT ON BILLING
+      BEGIN
+        DELETE FROM KPI
+        WHERE NAME='WEEKLY_PROFIT'
+          AND METRIC_DATE=DATE(NEW.PAID_AT,'weekday 0','-6 days'); -- lunes
+
+        INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
+        VALUES (
+          LOWER(HEX(RANDOMBLOB(16))),
+          'WEEKLY_PROFIT',
+          (
+            (SELECT IFNULL(SUM(B.AMOUNT),0)
+            FROM BILLING B
+            WHERE DATE(B.PAID_AT) BETWEEN DATE(NEW.PAID_AT,'weekday 0','-6 days') AND DATE(NEW.PAID_AT))
+            -
+            (SELECT IFNULL(SUM(E.AMOUNT),0)
+            FROM EXPENSES E
+            WHERE DATE(E.CREATED_AT) BETWEEN DATE(NEW.PAID_AT,'weekday 0','-6 days') AND DATE(NEW.PAID_AT))
+          ),
+          DATE(NEW.PAID_AT,'weekday 0','-6 days'),
+          DATETIME('now'),
+          'system'
+        );
+      END;
+    `);
+
+    // 📅 Mensual
+    await db.execute(`
+      CREATE TRIGGER IF NOT EXISTS trg_kpi_monthly
+      AFTER INSERT ON BILLING
+      BEGIN
+        DELETE FROM KPI
+        WHERE NAME='MONTHLY_PROFIT'
+          AND METRIC_DATE=DATE(NEW.PAID_AT,'start of month');
+
+        INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
+        VALUES (
+          LOWER(HEX(RANDOMBLOB(16))),
+          'MONTHLY_PROFIT',
+          (
+            (SELECT IFNULL(SUM(B.AMOUNT),0)
+            FROM BILLING B
+            WHERE strftime('%Y-%m',B.PAID_AT)=strftime('%Y-%m',NEW.PAID_AT))
+            -
+            (SELECT IFNULL(SUM(E.AMOUNT),0)
+            FROM EXPENSES E
+            WHERE strftime('%Y-%m',E.CREATED_AT)=strftime('%Y-%m',NEW.PAID_AT))
+          ),
+          DATE(NEW.PAID_AT,'start of month'),
+          DATETIME('now'),
+          'system'
+        );
+      END;
+    `);
+
+    // 📅 Anual
+    await db.execute(`
+      CREATE TRIGGER IF NOT EXISTS trg_kpi_yearly
+      AFTER INSERT ON BILLING
+      BEGIN
+        DELETE FROM KPI
+        WHERE NAME='YEARLY_PROFIT'
+          AND METRIC_DATE=DATE(NEW.PAID_AT,'start of year');
+
+        INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
+        VALUES (
+          LOWER(HEX(RANDOMBLOB(16))),
+          'YEARLY_PROFIT',
+          (
+            (SELECT IFNULL(SUM(B.AMOUNT),0)
+            FROM BILLING B
+            WHERE strftime('%Y',B.PAID_AT)=strftime('%Y',NEW.PAID_AT))
+            -
+            (SELECT IFNULL(SUM(E.AMOUNT),0)
+            FROM EXPENSES E
+            WHERE strftime('%Y',E.CREATED_AT)=strftime('%Y',NEW.PAID_AT))
+          ),
+          DATE(NEW.PAID_AT,'start of year'),
+          DATETIME('now'),
+          'system'
+        );
+      END;
+    `);
+
+    console.log("✅ Triggers KPI creados correctamente.");
 
     // ---------------------------
     // AUDIT_LOGS
