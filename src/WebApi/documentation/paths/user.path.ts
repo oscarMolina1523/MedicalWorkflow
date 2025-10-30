@@ -31,7 +31,17 @@ export const UserPaths = {
       },
       security: [{ BearerAuth: [] }],
       responses: {
-        201: { description: "User created successfully" },
+        201: {
+          description: "User created successfully",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/UserResponse" },
+              },
+            },
+          },
+        },
       },
     },
   },
@@ -44,7 +54,17 @@ export const UserPaths = {
       ],
       security: [{ BearerAuth: [] }],
       responses: {
-        200: { description: "User found" },
+        200: {
+          description: "User found",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/UserResponse" },
+              },
+            },
+          },
+        },
         404: { description: "User not found" },
       },
     },
@@ -64,7 +84,17 @@ export const UserPaths = {
         },
       },
       responses: {
-        200: { description: "User updated" },
+        200: {
+          description: "User updated",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/UserResponse" },
+              },
+            },
+          },
+        },
       },
     },
     delete: {

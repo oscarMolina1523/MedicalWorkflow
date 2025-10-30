@@ -2,12 +2,12 @@ export const AuditLogPaths = {
   "/logs": {
     get: {
       tags: ["AuditLogs"],
-      summary: "Obtener todos los registros de auditoría",
+      summary: "Obtain all audit logs",
       description:
-        "Devuelve una lista completa de los registros de auditoría del sistema, incluyendo acciones realizadas por los usuarios y fechas correspondientes.",
+        "Returns a complete list of system audit logs, including actions performed by users and corresponding dates.",
       responses: {
         200: {
-          description: "Lista de registros de auditoría obtenida correctamente",
+          description: "List of audit records obtained successfully",
           content: {
             "application/json": {
               schema: {
@@ -20,7 +20,7 @@ export const AuditLogPaths = {
           },
         },
         500: {
-          description: "Error interno del servidor al obtener los registros",
+          description: "Internal server error retrieving logs",
         },
       },
     },

@@ -1,7 +1,7 @@
 export const AuditLogSchemas = {
   Action: {
     type: "string",
-    description: "Tipo de acción registrada en el log de auditoría",
+    description: "Type of action recorded in the audit log",
     enum: ["create", "update", "delete", "view", "login", "logout"],
     example: "update",
   },
@@ -20,17 +20,17 @@ export const AuditLogSchemas = {
     properties: {
       id: {
         type: "string",
-        description: "Identificador único del registro de auditoría",
+        description: "Unique audit record identifier",
         example: "log_001",
       },
       entity: {
         type: "string",
-        description: "Nombre de la entidad afectada (User, Patient, Appointment, etc.)",
+        description: "Name of the affected entity (User, Patient, Appointment, etc.)",
         example: "Patient",
       },
       entityId: {
         type: "string",
-        description: "ID de la entidad afectada por la acción",
+        description: "ID of the entity affected by the action",
         example: "pat_101",
       },
       action: {
@@ -38,7 +38,7 @@ export const AuditLogSchemas = {
       },
       changes: {
         type: "object",
-        description: "Detalles de los cambios realizados en formato JSON",
+        description: "Details of the changes made in JSON format",
         example: {
           before: { name: "Juan Pérez" },
           after: { name: "Juan Pérez López" },
@@ -46,13 +46,13 @@ export const AuditLogSchemas = {
       },
       performedBy: {
         type: "string",
-        description: "ID del usuario que realizó la acción",
+        description: "ID of the user who performed the action",
         example: "usr_admin",
       },
       performedAt: {
         type: "string",
         format: "date-time",
-        description: "Fecha y hora en que se realizó la acción",
+        description: "Date and time the action was performed",
         example: "2025-10-26T16:45:00Z",
       },
     },

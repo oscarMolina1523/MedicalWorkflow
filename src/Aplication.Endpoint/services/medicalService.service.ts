@@ -53,7 +53,7 @@ export default class MedicalServiceService implements IMedicalServiceService {
 
     return {
       success: true,
-      message: "Patient created",
+      message: "Medical service created",
       data: newMedicalService,
     };
   }

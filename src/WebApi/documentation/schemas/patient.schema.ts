@@ -12,35 +12,35 @@ export const PatientSchemas = {
     properties: {
       firstName: {
         type: "string",
-        description: "Nombre del paciente",
+        description: "Patient name",
         example: "Juan",
       },
       lastName: {
         type: "string",
-        description: "Apellido del paciente",
+        description: "Patient's last name",
         example: "Pérez",
       },
       birthDate: {
         type: "string",
         format: "date",
-        description: "Fecha de nacimiento del paciente (YYYY-MM-DD)",
+        description: "Patient's date of birth (YYYY-MM-DD)",
         example: "1990-05-12",
       },
       gender: {
         type: "string",
-        description: "Género del paciente",
-        enum: ["Masculino", "Femenino", "Otro"],
-        example: "Masculino",
+        description: "Patient's gender",
+        enum: ["Male", "Female"],
+        example: "Male",
       },
       departmentId: {
         type: "string",
-        description: "ID del departamento donde está asignado el paciente",
+        description: "ID of the department where the patient is assigned",
         example: "dep_12345",
       },
       medicalHistory: {
         type: "string",
         description:
-          "Historial médico (JSON o texto estructurado con diagnósticos y tratamientos)",
+          "Medical history (JSON or structured text with diagnoses and treatments)",
         example: "{\"diagnosis\":\"Gripe\",\"treatments\":[\"Paracetamol\"]}",
       },
     },

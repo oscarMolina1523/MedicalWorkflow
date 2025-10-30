@@ -5,17 +5,17 @@ export const InventorySchemas = {
     properties: {
       departmentId: {
         type: "string",
-        description: "ID del departamento que posee el medicamento",
+        description: "ID of the department that has the medication",
         example: "dep_001",
       },
       medicationId: {
         type: "string",
-        description: "ID del medicamento en el inventario",
+        description: "Drug ID in inventory",
         example: "med_045",
       },
       quantity: {
         type: "number",
-        description: "Cantidad actual disponible en inventario",
+        description: "Current quantity available in inventory",
         example: 120,
       },
     },
@@ -36,44 +36,44 @@ export const InventorySchemas = {
     properties: {
       id: {
         type: "string",
-        description: "Identificador único del registro de inventario",
+        description: "Unique inventory record identifier",
         example: "inv_001",
       },
       departmentId: {
         type: "string",
-        description: "ID del departamento que gestiona el medicamento",
+        description: "ID of the department that manages the medication",
         example: "dep_001",
       },
       medicationId: {
         type: "string",
-        description: "ID del medicamento asociado",
+        description: "Associated drug ID",
         example: "med_045",
       },
       quantity: {
         type: "number",
-        description: "Cantidad disponible actualmente en inventario",
+        description: "Quantity currently available in inventory",
         example: 120,
       },
       createdAt: {
         type: "string",
         format: "date-time",
-        description: "Fecha en la que se creó el registro",
+        description: "Date the record was created",
         example: "2025-10-26T15:30:00Z",
       },
       updatedAt: {
         type: "string",
         format: "date-time",
-        description: "Última fecha de actualización del registro",
+        description: "Last date of record update",
         example: "2025-10-27T09:45:00Z",
       },
       createdBy: {
         type: "string",
-        description: "ID del usuario que creó el registro",
+        description: "User ID of the person who created the record",
         example: "usr_admin",
       },
       updatedBy: {
         type: "string",
-        description: "ID del usuario que actualizó el registro por última vez",
+        description: "User ID of the person who last updated the record",
         example: "usr_jefeDepto",
       },
     },

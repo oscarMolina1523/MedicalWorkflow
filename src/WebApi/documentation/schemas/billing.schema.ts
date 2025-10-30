@@ -1,14 +1,14 @@
 export const BillingSchemas = {
   BillingStatus: {
     type: "string",
-    description: "Estado actual de la factura",
+    description: "Current status of the invoice",
     enum: ["pending", "paid", "canceled"],
     example: "pending",
   },
 
   Payment: {
     type: "string",
-    description: "Método de pago utilizado",
+    description: "Payment method used",
     enum: ["cash", "card"],
     example: "cash",
   },
@@ -27,27 +27,27 @@ export const BillingSchemas = {
     properties: {
       patientId: {
         type: "string",
-        description: "ID del paciente",
+        description: "Patient ID",
         example: "pat_001",
       },
       appointmentId: {
         type: "string",
-        description: "ID de la cita asociada (opcional)",
+        description: "Associated appointment ID (optional)",
         example: "app_001",
       },
       serviceId: {
         type: "string",
-        description: "ID del servicio médico facturado",
+        description: "Billed medical service ID",
         example: "svc_001",
       },
       departmentId: {
         type: "string",
-        description: "ID del departamento",
+        description: "Department ID",
         example: "dep_001",
       },
       amount: {
         type: "number",
-        description: "Monto total calculado",
+        description: "Total amount calculated",
         example: 100.0,
       },
       status: {
@@ -59,7 +59,7 @@ export const BillingSchemas = {
       paidAt: {
         type: "string",
         format: "date-time",
-        description: "Fecha de pago (si aplica)",
+        description: "Payment date (if applicable)",
         example: "2025-10-28T15:00:00Z",
       },
     },
@@ -80,32 +80,32 @@ export const BillingSchemas = {
     properties: {
       id: {
         type: "string",
-        description: "Identificador único de la factura",
+        description: "Unique invoice identifier",
         example: "bill_001",
       },
       patientId: {
         type: "string",
-        description: "ID del paciente",
+        description: "Patient ID",
         example: "pat_001",
       },
       appointmentId: {
         type: "string",
-        description: "ID de la cita asociada (opcional)",
+        description: "Associated appointment ID (optional)",
         example: "app_001",
       },
       serviceId: {
         type: "string",
-        description: "ID del servicio médico",
+        description: "Medical Service ID",
         example: "svc_001",
       },
       departmentId: {
         type: "string",
-        description: "ID del departamento",
+        description: "Department ID",
         example: "dep_001",
       },
       amount: {
         type: "number",
-        description: "Monto total de la factura",
+        description: "Total invoice amount",
         example: 100.0,
       },
       status: {
@@ -117,13 +117,13 @@ export const BillingSchemas = {
       createdAt: {
         type: "string",
         format: "date-time",
-        description: "Fecha de creación del registro",
+        description: "Date the record was created",
         example: "2025-10-28T14:00:00Z",
       },
       paidAt: {
         type: "string",
         format: "date-time",
-        description: "Fecha de pago (si aplica)",
+        description: "Payment date (if applicable)",
         example: "2025-10-28T15:00:00Z",
       },
     },

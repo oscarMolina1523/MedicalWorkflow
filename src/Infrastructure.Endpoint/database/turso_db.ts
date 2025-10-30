@@ -320,6 +320,37 @@ export async function initializeDatabase(): Promise<void> {
       );
     }
     console.log("✅ EXPENSES insertados.");
+    // ---------------------------
+    // KPI
+    // ---------------------------
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS KPI (
+        ID TEXT PRIMARY KEY,
+        NAME TEXT NOT NULL,
+        DEPARTMENT_ID TEXT,
+        VALUE REAL NOT NULL,
+        METRIC_DATE TEXT NOT NULL,
+        CREATED_AT TEXT NOT NULL,
+        CREATED_BY TEXT NOT NULL
+      );
+    `);
+    console.log("✅ Tabla KPI creada (sin datos).");
+
+    // ---------------------------
+    // AUDIT_LOGS
+    // ---------------------------
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS AUDIT_LOGS (
+        ID TEXT PRIMARY KEY,
+        ENTITY TEXT NOT NULL,
+        ENTITY_ID TEXT NOT NULL,
+        ACTION TEXT NOT NULL,
+        CHANGES TEXT,
+        PERFORMED_BY TEXT NOT NULL,
+        PERFORMED_AT TEXT NOT NULL
+      );
+    `);
+    console.log("✅ Tabla AUDIT_LOGS creada (sin datos).");
 
     console.log("✅ Base de datos inicializada correctamente en Turso.");
   } catch (error) {

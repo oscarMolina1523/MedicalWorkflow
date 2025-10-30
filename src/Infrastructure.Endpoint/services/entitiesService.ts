@@ -115,7 +115,7 @@ export class EntitiesService implements IEntitiesService {
       new SqlColumnSettings("BASE_COST", "baseCost", false),
       new SqlColumnSettings("ACTIVE", "active", false),
     ];
-    return new SqlEntitySettings("MEDICAL_SERVICES", columns);
+    return new SqlEntitySettings("SERVICES", columns);
   }
 
   private getInventorySettings(): SqlEntitySettings {
@@ -129,7 +129,7 @@ export class EntitiesService implements IEntitiesService {
       new SqlColumnSettings("CREATED_BY", "createdBy", false),
       new SqlColumnSettings("UPDATED_BY", "updatedBy", false),
     ];
-    return new SqlEntitySettings("INVENTORIES", columns);
+    return new SqlEntitySettings("INVENTORY", columns);
   }
 
   private getAppointmentSettings(): SqlEntitySettings {
@@ -162,7 +162,7 @@ export class EntitiesService implements IEntitiesService {
       new SqlColumnSettings("CREATED_AT", "createdAt", false),
       new SqlColumnSettings("PAID_AT", "paidAt", false),
     ];
-    return new SqlEntitySettings("BILLINGS", columns);
+    return new SqlEntitySettings("BILLING", columns);
   }
 
   private getExpenseSettings(): SqlEntitySettings {
@@ -187,7 +187,7 @@ export class EntitiesService implements IEntitiesService {
       new SqlColumnSettings("CREATED_AT", "createdAt", false),
       new SqlColumnSettings("CREATED_BY", "createdBy", false),
     ];
-    return new SqlEntitySettings("KPIS", columns);
+    return new SqlEntitySettings("KPI", columns);
   }
 
   private getAuditLogSettings(): SqlEntitySettings {

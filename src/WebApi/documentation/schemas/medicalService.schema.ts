@@ -5,22 +5,22 @@ export const MedicalServiceSchemas = {
     properties: {
       name: {
         type: "string",
-        description: "Nombre del servicio médico (ej. 'Consulta general', 'Ecografía')",
-        example: "Consulta general",
+        description: "Name of medical service (e.g., 'General consultation', 'Ultrasound')",
+        example: "General inquiry",
       },
       departmentId: {
         type: "string",
-        description: "ID del departamento responsable del servicio",
+        description: "ID of the department responsible for the service",
         example: "dep_001",
       },
       baseCost: {
         type: "number",
-        description: "Costo base del servicio médico",
+        description: "Base cost of medical service",
         example: 50.0,
       },
       active: {
         type: "boolean",
-        description: "Indica si el servicio está activo o suspendido",
+        description: "Indicates whether the service is active or suspended",
         example: true,
       },
     },
@@ -32,27 +32,27 @@ export const MedicalServiceSchemas = {
     properties: {
       id: {
         type: "string",
-        description: "Identificador único del servicio médico",
+        description: "Unique identifier of the medical service",
         example: "svc_001",
       },
       name: {
         type: "string",
-        description: "Nombre del servicio médico",
-        example: "Consulta general",
+        description: "Name of medical service",
+        example: "General consultation",
       },
       departmentId: {
         type: "string",
-        description: "ID del departamento responsable del servicio",
+        description: "ID of the department responsible for the service",
         example: "dep_001",
       },
       baseCost: {
         type: "number",
-        description: "Costo base del servicio médico en dólares",
+        description: "Base cost of medical service in dollars",
         example: 50.0,
       },
       active: {
         type: "boolean",
-        description: "Estado del servicio (activo o inactivo)",
+        description: "Service status (active or inactive)",
         example: true,
       },
     },

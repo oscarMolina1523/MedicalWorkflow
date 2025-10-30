@@ -1,7 +1,7 @@
 export const AppointmentSchemas = {
   AppointmentStatus: {
     type: "string",
-    description: "Estado actual de la cita médica",
+    description: "Current status of medical appointment",
     enum: ["scheduled", "completed", "canceled"],
     example: "scheduled",
   },
@@ -19,23 +19,23 @@ export const AppointmentSchemas = {
     properties: {
       patientId: {
         type: "string",
-        description: "ID del paciente asignado a la cita",
+        description: "Patient ID assigned to the appointment",
         example: "pat_001",
       },
       departmentId: {
         type: "string",
-        description: "ID del departamento donde se realiza la cita",
+        description: "ID of the department where the appointment is being made",
         example: "dep_12345",
       },
       doctorId: {
         type: "string",
-        description: "ID del médico asignado",
+        description: "Assigned Physician ID",
         example: "usr_doc_10",
       },
       scheduledAt: {
         type: "string",
         format: "date-time",
-        description: "Fecha y hora programada para la cita",
+        description: "Date and time scheduled for the appointment",
         example: "2025-11-02T09:30:00Z",
       },
       status: {
@@ -43,8 +43,8 @@ export const AppointmentSchemas = {
       },
       notes: {
         type: "string",
-        description: "Notas adicionales o motivo de la cita",
-        example: "Consulta de seguimiento postoperatorio",
+        description: "Additional notes or reason for the appointment",
+        example: "Post-operative follow-up consultation",
       },
     },
   },
@@ -67,28 +67,28 @@ export const AppointmentSchemas = {
     properties: {
       id: {
         type: "string",
-        description: "Identificador único de la cita",
+        description: "Unique appointment identifier",
         example: "app_001",
       },
       patientId: {
         type: "string",
-        description: "ID del paciente asignado a la cita",
+        description: "Patient ID assigned to the appointment",
         example: "pat_001",
       },
       departmentId: {
         type: "string",
-        description: "ID del departamento donde se realiza la cita",
+        description: "ID of the department where the appointment is being made",
         example: "dep_12345",
       },
       doctorId: {
         type: "string",
-        description: "ID del médico asignado",
+        description: "Assigned Physician ID",
         example: "usr_doc_10",
       },
       scheduledAt: {
         type: "string",
         format: "date-time",
-        description: "Fecha y hora programada para la cita",
+        description: "Date and time scheduled for the appointment",
         example: "2025-11-02T09:30:00Z",
       },
       status: {
@@ -96,29 +96,29 @@ export const AppointmentSchemas = {
       },
       notes: {
         type: "string",
-        description: "Notas adicionales o motivo de la cita",
-        example: "Revisión general",
+        description: "Additional notes or reason for the appointment",
+        example: "General review",
       },
       createdAt: {
         type: "string",
         format: "date-time",
-        description: "Fecha de creación del registro",
+        description: "Date the record was created",
         example: "2025-10-26T14:35:00Z",
       },
       updatedAt: {
         type: "string",
         format: "date-time",
-        description: "Última fecha de actualización",
+        description: "Last update date",
         example: "2025-10-27T10:15:00Z",
       },
       createdBy: {
         type: "string",
-        description: "ID del usuario que creó la cita",
+        description: "ID of the user who created the appointment",
         example: "usr_admin",
       },
       updatedBy: {
         type: "string",
-        description: "ID del usuario que actualizó la cita por última vez",
+        description: "ID of the user who last updated the appointment",
         example: "usr_jefeDepto",
       },
     },

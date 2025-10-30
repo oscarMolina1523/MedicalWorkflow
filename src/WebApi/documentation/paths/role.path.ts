@@ -3,13 +3,13 @@ import { RoleSchemas } from "../schemas/role.schema";
 export const RolePaths = {
   "/roles": {
     get: {
-      summary: "Obtener todos los roles",
-      description: "Devuelve la lista completa de roles registrados en el sistema.",
+      summary: "Get all roles",
+      description: "Returns the complete list of roles registered in the system.",
       tags: ["Roles"],
       security: [{ BearerAuth: [] }],
       responses: {
         200: {
-          description: "Lista de roles obtenida correctamente",
+          description: "List of roles obtained successfully",
           content: {
             "application/json": {
               schema: {
@@ -26,14 +26,14 @@ export const RolePaths = {
           },
         },
         500: {
-          description: "Error interno del servidor",
+          description: "Internal Server Error",
         },
       },
     },
 
     post: {
-      summary: "Crear un nuevo rol",
-      description: "Agrega un nuevo rol con nombre, descripción y nivel jerárquico.",
+      summary: "Create a new role",
+      description: "Add a new role with a name, description, and hierarchical level.",
       tags: ["Roles"],
       requestBody: {
         required: true,
@@ -46,14 +46,14 @@ export const RolePaths = {
       security: [{ BearerAuth: [] }],
       responses: {
         201: {
-          description: "Rol creado correctamente",
+          description: "Successfully created role",
           content: {
             "application/json": {
               schema: {
                 type: "object",
                 properties: {
                   success: { type: "boolean", example: true },
-                  message: { type: "string", example: "Role created successfully" },
+                  message: { type: "string", example: "Successfully created role" },
                   status: RoleSchemas.Role,
                 },
               },
@@ -61,7 +61,7 @@ export const RolePaths = {
           },
         },
         400: {
-          description: "Datos inválidos o campos faltantes",
+          description: "Invalid data or missing fields",
         },
       },
     },
@@ -69,8 +69,8 @@ export const RolePaths = {
 
   "/roles/{id}": {
     get: {
-      summary: "Obtener un rol por ID",
-      description: "Devuelve la información detallada de un rol según su identificador.",
+      summary: "Get a role by ID",
+      description: "Returns detailed information about a role based on its identifier.",
       tags: ["Roles"],
       parameters: [
         {
@@ -78,13 +78,13 @@ export const RolePaths = {
           in: "path",
           required: true,
           schema: { type: "string" },
-          description: "Identificador único del rol",
+          description: "Unique role identifier",
         },
       ],
       security: [{ BearerAuth: [] }],
       responses: {
         200: {
-          description: "Rol encontrado",
+          description: "Found role",
           content: {
             "application/json": {
               schema: {
@@ -98,17 +98,17 @@ export const RolePaths = {
           },
         },
         404: {
-          description: "Rol no encontrado",
+          description: "Rol not found",
         },
         500: {
-          description: "Error al obtener el rol",
+          description: "Error obtaining the role",
         },
       },
     },
 
     put: {
-      summary: "Actualizar un rol existente",
-      description: "Permite actualizar el nombre, descripción o nivel jerárquico de un rol.",
+      summary: "Update an existing role",
+      description: "Allows you to update the name, description, or hierarchical level of a role.",
       tags: ["Roles"],
       parameters: [
         {
@@ -116,7 +116,7 @@ export const RolePaths = {
           in: "path",
           required: true,
           schema: { type: "string" },
-          description: "Identificador del rol a actualizar",
+          description: "Identifier of the role to be updated",
         },
       ],
       requestBody: {
@@ -130,7 +130,7 @@ export const RolePaths = {
       security: [{ BearerAuth: [] }],
       responses: {
         200: {
-          description: "Rol actualizado correctamente",
+          description: "Role updated successfully",
           content: {
             "application/json": {
               schema: {
@@ -145,17 +145,17 @@ export const RolePaths = {
           },
         },
         400: {
-          description: "Campos faltantes o inválidos",
+          description: "Missing or invalid fields",
         },
         404: {
-          description: "Rol no encontrado",
+          description: "Rol not found",
         },
       },
     },
 
     delete: {
-      summary: "Eliminar un rol",
-      description: "Elimina un rol del sistema mediante su identificador.",
+      summary: "Delete a role",
+      description: "Remove a system role using its identifier.",
       tags: ["Roles"],
       parameters: [
         {
@@ -163,13 +163,13 @@ export const RolePaths = {
           in: "path",
           required: true,
           schema: { type: "string" },
-          description: "Identificador del rol a eliminar",
+          description: "Identifier of the role to be deleted",
         },
       ],
       security: [{ BearerAuth: [] }],
       responses: {
         200: {
-          description: "Rol eliminado correctamente",
+          description: "Successfully deleted role",
           content: {
             "application/json": {
               schema: {
@@ -183,10 +183,10 @@ export const RolePaths = {
           },
         },
         404: {
-          description: "Rol no encontrado",
+          description: "Rol not found",
         },
         400: {
-          description: "Error al eliminar el rol",
+          description: "Error deleting the role",
         },
       },
     },

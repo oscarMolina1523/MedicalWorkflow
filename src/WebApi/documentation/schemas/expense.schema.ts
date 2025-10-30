@@ -1,7 +1,7 @@
 export const ExpenseSchemas = {
   OperatingCosts: {
     type: "string",
-    description: "Categoría del gasto operativo",
+    description: "Operating Expense Category",
     enum: ["inventory", "salary", "maintenance", "other"],
     example: "inventory",
   },
@@ -12,20 +12,20 @@ export const ExpenseSchemas = {
     properties: {
       departmentId: {
         type: "string",
-        description: "ID del departamento responsable del gasto",
+        description: "ID of the department responsible for the expenditure",
         example: "dep_001",
       },
       description: {
         type: "string",
-        description: "Descripción detallada del gasto",
-        example: "Compra de guantes quirúrgicos",
+        description: "Detailed description of the expense",
+        example: "Purchase of surgical gloves",
       },
       category: {
         $ref: "#/components/schemas/OperatingCosts",
       },
       amount: {
         type: "number",
-        description: "Monto del gasto",
+        description: "Amount of expense",
         example: 250.0,
       },
     },
@@ -44,31 +44,31 @@ export const ExpenseSchemas = {
     properties: {
       id: {
         type: "string",
-        description: "Identificador único del gasto",
+        description: "Unique expenditure identifier",
         example: "exp_001",
       },
       departmentId: {
         type: "string",
-        description: "ID del departamento responsable",
+        description: "Responsible department ID",
         example: "dep_001",
       },
       description: {
         type: "string",
-        description: "Descripción detallada del gasto",
-        example: "Compra de guantes quirúrgicos",
+        description: "Detailed description of the expense",
+        example: "Purchase of surgical gloves",
       },
       category: {
         $ref: "#/components/schemas/OperatingCosts",
       },
       amount: {
         type: "number",
-        description: "Monto del gasto",
+        description: "Amount of expense",
         example: 250.0,
       },
       createdAt: {
         type: "string",
         format: "date-time",
-        description: "Fecha de registro del gasto",
+        description: "Expense recording date",
         example: "2025-10-28T10:30:00Z",
       },
     },

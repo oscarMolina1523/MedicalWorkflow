@@ -94,7 +94,14 @@ export const PatientPaths = {
       },
       security: [{ BearerAuth: [] }],
       responses: {
-        200: { description: "Patient updated successfully" },
+        200: {
+          description: "Patient updated successfully",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/Patient" },
+            },
+          },
+        },
         404: { description: "Patient not found" },
       },
     },

@@ -22,13 +22,13 @@ export const AuthPaths = {
       },
       responses: {
         200: {
-          description: "Login exitoso",
+          description: "Successful login",
           content: {
             "application/json": {
               schema: {
                 type: "object",
                 properties: {
-                  message: { type: "string", example: "Login exitoso" },
+                  message: { type: "string", example: "Successful login" },
                   user: UserSchemas.UserResponse,
                   token: {
                     type: "string",
@@ -40,10 +40,10 @@ export const AuthPaths = {
           },
         },
         401: {
-          description: "Credenciales inválidas",
+          description: "Invalid credentials",
         },
         500: {
-          description: "Error interno del servidor",
+          description: "Internal Server Error",
         },
       },
     },
@@ -64,7 +64,7 @@ export const AuthPaths = {
       },
       responses: {
         201: {
-          description: "Usuario registrado exitosamente",
+          description: "Successfully registered user",
           content: {
             "application/json": {
               schema: {
@@ -72,7 +72,7 @@ export const AuthPaths = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "Usuario registrado exitosamente",
+                    example: "Successfully registered user",
                   },
                   user: UserSchemas.UserResponse,
                 },
@@ -81,10 +81,10 @@ export const AuthPaths = {
           },
         },
         400: {
-          description: "Campos inválidos o usuario ya existente",
+          description: "Invalid fields or existing user",
         },
         500: {
-          description: "Error interno del servidor",
+          description: "Internal Server Error",
         },
       },
     },
@@ -99,7 +99,7 @@ export const AuthPaths = {
       security: [{ BearerAuth: [] }],
       responses: {
         200: {
-          description: "Logout exitoso",
+          description: "Successful logout",
           content: {
             "application/json": {
               schema: {
@@ -107,7 +107,7 @@ export const AuthPaths = {
                 properties: {
                   message: {
                     type: "string",
-                    example: "Sesión cerrada correctamente",
+                    example: "Successfully logged out",
                   },
                 },
               },
