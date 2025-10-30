@@ -96,7 +96,11 @@ export default class AppointmentController {
     }
 
     try {
-      const success = await this.service.updateAppointment(id, updatedData, token);
+      const success = await this.service.updateAppointment(
+        id,
+        updatedData,
+        token
+      );
 
       if (success) {
         res.status(200).json({
@@ -114,12 +118,13 @@ export default class AppointmentController {
 
   deleteAppointment = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
+    const token = req.headers["authorization"] || "";
     if (!id) {
       return res.status(400).json({ message: "Appointment ID is required." });
     }
 
     try {
-      const result = await this.service.deleteAppointment(id);
+      const result = await this.service.deleteAppointment(id, token);
 
       if (result) {
         res.status(200).json({

@@ -15,5 +15,5 @@ export interface IAppointmentService {
     appointment: AppointmentRequest,
     token: string
   ): Promise<ServiceResult<Appointment | null>>;
-  deleteAppointment(id: string): Promise<{ success: boolean; message: string }>;
+  deleteAppointment(id: string, token:string): Promise<{ success: boolean; message: string }>;
 }
