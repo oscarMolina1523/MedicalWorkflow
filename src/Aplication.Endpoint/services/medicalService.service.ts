@@ -20,7 +20,7 @@ export default class MedicalServiceService implements IMedicalServiceService {
     @inject("IMedicalServiceRepository")
     medicalServiceRepository: IMedicalServiceRepository,
     @inject("ITokenRepository") tokenRepository: ITokenRepository,
-    @inject("IAuditLog") logRepository: IAuditLogRepository
+    @inject("IAuditLogRepository") logRepository: IAuditLogRepository
   ) {
     this._medicalServiceRepository = medicalServiceRepository;
     this._tokenRepository = tokenRepository;
