@@ -5,7 +5,7 @@ export default class AuditLog extends BaseModel {
   entity: string; // User, Patient, Appointment, InventoryItem
   entityId: string;
   action: Action;
-  changes: JSON; // Detalle de cambios
+  changes: string; // Detalle de cambios
   performedBy: string;
   performedAt: Date;
 
@@ -22,7 +22,7 @@ export default class AuditLog extends BaseModel {
     entity: string;
     entityId: string;
     action: Action;
-    changes: JSON;
+    changes: string;
     performedAt: Date;
     performedBy: string;
   }) {
