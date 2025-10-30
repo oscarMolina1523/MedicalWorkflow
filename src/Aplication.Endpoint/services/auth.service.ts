@@ -8,18 +8,24 @@ import bcrypt from "bcryptjs";
 import { ITokenRepository } from "../../Domain.Endpoint/interfaces/repositories/tokenRepository.interface";
 import { UserMapper } from "../mappers/user.mapper";
 import { UserRequest } from "../dtos/request/user.request";
+import { IAuditLogRepository } from "../../Domain.Endpoint/interfaces/repositories/auditLogRepository.interface";
+import LOGMapper from "../mappers/log.mapper";
+import { Action } from "../../Domain.Endpoint/entities/action.enum";
 
 @injectable()
 export default class AuthService implements IAuthService {
   private readonly _userService: IUserService;
   private readonly _tokenRepository: ITokenRepository;
+  private readonly _logRepository: IAuditLogRepository;
 
   constructor(
     @inject("IUserService") userService: IUserService,
-    @inject("ITokenRepository") tokenRepository: ITokenRepository
+    @inject("ITokenRepository") tokenRepository: ITokenRepository,
+    @inject("IAuditLogRepository") logRepository: IAuditLogRepository
   ) {
     this._userService = userService;
     this._tokenRepository = tokenRepository;
+    this._logRepository = logRepository;
   }
 
   async login(
@@ -40,6 +46,14 @@ export default class AuthService implements IAuthService {
 
     const token = this._tokenRepository.generateAccesToken(data);
 
+    const log = LOGMapper.toEntity({
+      entity: "Auth",
+      entityId: user.id,
+      action: Action.LOGIN,
+      changes: "Log in User",
+      performedBy: user.id,
+    });
+    await this._logRepository.create(log);
     return { message: "Login exitoso", data: data, token };
   }
 
@@ -60,14 +74,28 @@ export default class AuthService implements IAuthService {
     );
 
     if (!created.success || !created.data) {
-      return { success:false, message: "Error al registrar usuario" };
+      return { success: false, message: "Error al registrar usuario" };
     }
 
-    return {success:true, message: "Usuario registrado exitosamente", data: created.data };
+    const log = LOGMapper.toEntity({
+      entity: "Auth",
+      entityId: created.data.id,
+      action: Action.CREATE,
+      changes: "Register User",
+      performedBy: created.data.id,
+    });
+
+    await this._logRepository.create(log);
+
+    return {
+      success: true,
+      message: "Usuario registrado exitosamente",
+      data: created.data,
+    };
   }
 
   logout(): string {
-    const result="Se ha cerrado sesión correctamente";
+    const result = "Se ha cerrado sesión correctamente";
     return result;
   }
 }

@@ -43,13 +43,14 @@ export default class RoleController {
 
   addRole = async (req: Request, res: Response) => {
     const roleDto: RoleRequest = req.body;
+    const token = req.headers["authorization"] || "";
 
     if (!roleDto.name) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
     try {
-      const response = await this.service.addRole(roleDto);
+      const response = await this.service.addRole(roleDto, token);
       res.status(201).json({
         success: response.success,
         message: response.message,
@@ -63,6 +64,7 @@ export default class RoleController {
   updateRole = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
     const updatedData: RoleRequest = req.body;
+    const token = req.headers["authorization"] || "";
 
     if (!id) {
       return res.status(400).json({ message: "Role ID is required." });
@@ -75,7 +77,7 @@ export default class RoleController {
     }
 
     try {
-      const success = await this.service.updateRole(id, updatedData);
+      const success = await this.service.updateRole(id, updatedData, token);
 
       if (success) {
         res.status(200).json({
@@ -93,12 +95,14 @@ export default class RoleController {
 
   deleteRole = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
+    const token = req.headers["authorization"] || "";
+
     if (!id) {
       return res.status(400).json({ message: "Role ID is required." });
     }
 
     try {
-      const result = await this.service.deleteRole(id);
+      const result = await this.service.deleteRole(id, token);
 
       if (result) {
         res.status(200).json({

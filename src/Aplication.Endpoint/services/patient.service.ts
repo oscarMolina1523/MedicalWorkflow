@@ -6,18 +6,24 @@ import { IPatientService } from "../interfaces/patientService.interface";
 import { ServiceResult } from "../utils/serviceResult.type";
 import { ITokenRepository } from "../../Domain.Endpoint/interfaces/repositories/tokenRepository.interface";
 import { PatientMapper } from "../mappers/patient.mapper";
+import { IAuditLogRepository } from "../../Domain.Endpoint/interfaces/repositories/auditLogRepository.interface";
+import LOGMapper from "../mappers/log.mapper";
+import { Action } from "../../Domain.Endpoint/entities/action.enum";
 
 @injectable()
 export default class PatientService implements IPatientService {
   private readonly _patientRepository: IPatientRepository;
   private readonly _tokenRepository: ITokenRepository;
+  private readonly _logRepository: IAuditLogRepository;
 
   constructor(
     @inject("IPatientRepository") patientRepository: IPatientRepository,
-    @inject("ITokenRepository") tokenRepository: ITokenRepository
+    @inject("ITokenRepository") tokenRepository: ITokenRepository,
+    @inject("IAuditLogRepository") logRepository: IAuditLogRepository
   ) {
     this._patientRepository = patientRepository;
     this._tokenRepository = tokenRepository;
+    this._logRepository = logRepository;
   }
 
   private getCurrentUser(token: string) {
@@ -50,13 +56,23 @@ export default class PatientService implements IPatientService {
     const newPatient = PatientMapper.toEntity(patient, currentUser.id);
     await this._patientRepository.create(newPatient);
 
+    const log = LOGMapper.toEntity({
+      entity: "Patient",
+      entityId: newPatient.id,
+      action: Action.CREATE,
+      changes: "Create new patient",
+      performedBy: currentUser.id,
+    });
+
+    await this._logRepository.create(log);
+
     return { success: true, message: "Patient created", data: newPatient };
   }
 
   async updatePatient(
     id: string,
     patient: PatientRequest,
-    token:string
+    token: string
   ): Promise<ServiceResult<Patient | null>> {
     const existing = await this._patientRepository.getById(id);
     if (!existing) {
@@ -66,19 +82,48 @@ export default class PatientService implements IPatientService {
     const currentUser = this.getCurrentUser(token);
 
     // actualizar solo las propiedades necesarias
-    const updatedPatient = PatientMapper.updateEntity(existing, patient, currentUser.id);
+    const updatedPatient = PatientMapper.updateEntity(
+      existing,
+      patient,
+      currentUser.id
+    );
     await this._patientRepository.update(updatedPatient);
+
+    const log = LOGMapper.toEntity({
+      entity: "Patient",
+      entityId: updatedPatient.id,
+      action: Action.UPDATE,
+      changes: "Update patient",
+      performedBy: currentUser.id,
+    });
+
+    await this._logRepository.create(log);
 
     return { success: true, message: "Patient updated", data: updatedPatient };
   }
 
-  async deletePatient(id: string): Promise<{ success: boolean; message: string }> {
+  async deletePatient(
+    id: string, token:string
+  ): Promise<{ success: boolean; message: string }> {
+    const currentUser = this.getCurrentUser(token);
+
     const existing = await this._patientRepository.getById(id);
     if (!existing) {
       return { success: false, message: "Patient not found" };
     }
 
     await this._patientRepository.delete(existing);
+
+    const log = LOGMapper.toEntity({
+      entity: "Patient",
+      entityId: existing.id,
+      action: Action.DELETE,
+      changes: "Delete patient",
+      performedBy: currentUser.id,
+    });
+
+    await this._logRepository.create(log);
+
     return { success: true, message: "Patient deleted" };
   }
 }

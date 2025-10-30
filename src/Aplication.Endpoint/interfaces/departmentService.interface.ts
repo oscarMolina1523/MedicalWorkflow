@@ -6,11 +6,13 @@ export interface IDepartmentService {
   getDepartments(): Promise<Department[]>;
   getById(id: string): Promise<Department | null>;
   addDepartment(
-    department: DepartmentRequest
+    department: DepartmentRequest,
+    token:string
   ): Promise<ServiceResult<Department>>;
   updateDepartment(
     id: string,
-    department: DepartmentRequest
+    department: DepartmentRequest, 
+    token:string
   ): Promise<ServiceResult<Department | null>>;
-  deleteDepartment(id: string): Promise<{ success: boolean; message: string }>;
+  deleteDepartment(id: string, token:string): Promise<{ success: boolean; message: string }>;
 }

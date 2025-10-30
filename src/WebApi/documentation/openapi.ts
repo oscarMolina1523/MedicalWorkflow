@@ -5,6 +5,7 @@ import { BillingPaths } from "./paths/billing.path";
 import { DepartmentPaths } from "./paths/department.path";
 import { ExpensePaths } from "./paths/expense.path";
 import { InventoryPaths } from "./paths/inventory.path";
+import { KpiPaths } from "./paths/kpi.path";
 import { MedicalServicePaths } from "./paths/medicalService.path";
 import { MedicationPaths } from "./paths/medication.path";
 import { PatientPaths } from "./paths/patient.path";
@@ -16,6 +17,7 @@ import { BillingSchemas } from "./schemas/billing.schema";
 import { DepartmentSchemas } from "./schemas/department.schema";
 import { ExpenseSchemas } from "./schemas/expense.schema";
 import { InventorySchemas } from "./schemas/inventory.schema";
+import { KpiSchemas } from "./schemas/kpi.schema";
 import { MedicalServiceSchemas } from "./schemas/medicalService.schema";
 import { MedicationSchemas } from "./schemas/medication.schema";
 import { PatientSchemas } from "./schemas/patient.schema";
@@ -52,7 +54,8 @@ export const OpenApiSpecification = {
     ...AuditLogPaths,
     ...MedicalServicePaths,
     ...BillingPaths,
-    ...ExpensePaths
+    ...ExpensePaths,
+    ...KpiPaths
   },
   components: {
     securitySchemes: {
@@ -73,7 +76,8 @@ export const OpenApiSpecification = {
       ...AuditLogSchemas,
       ...MedicalServiceSchemas,
       ...BillingSchemas,
-      ...ExpenseSchemas
+      ...ExpenseSchemas,
+      ...KpiSchemas
     },
   },
 };

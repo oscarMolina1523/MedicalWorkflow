@@ -115,12 +115,14 @@ export default class InventoryController {
 
   deleteInventory = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
+    const token = req.headers["authorization"] || "";
+
     if (!id) {
       return res.status(400).json({ message: "Inventory ID is required." });
     }
 
     try {
-      const result = await this.service.deleteInventory(id);
+      const result = await this.service.deleteInventory(id, token);
 
       if (result) {
         res.status(200).json({

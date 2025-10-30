@@ -5,10 +5,11 @@ import { ServiceResult } from "../utils/serviceResult.type";
 export interface IMedicationService {
   getMedications(): Promise<Medication[]>;
   getById(id: string): Promise<Medication | null>;
-  addMedication(medication: MedicationRequest): Promise<ServiceResult<Medication>>;
+  addMedication(medication: MedicationRequest, token: string): Promise<ServiceResult<Medication>>;
   updateMedication(
     id: string,
-    medication: MedicationRequest
+    medication: MedicationRequest, 
+    token:string
   ): Promise<ServiceResult<Medication | null>>;
-  deleteMedication(id: string): Promise<{ success: boolean; message: string }>;
+  deleteMedication(id: string, token: string): Promise<{ success: boolean; message: string }>;
 }

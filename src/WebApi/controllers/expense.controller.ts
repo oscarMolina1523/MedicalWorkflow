@@ -55,6 +55,7 @@ export default class ExpenseController {
 
   addExpense = async (req: Request, res: Response) => {
     const expenseDto: ExpenseRequest = req.body;
+    const token = req.headers["authorization"] || "";
 
     if (
       !expenseDto.departmentId ||
@@ -66,7 +67,7 @@ export default class ExpenseController {
     }
 
     try {
-      const response = await this.service.addExpense(expenseDto);
+      const response = await this.service.addExpense(expenseDto, token);
       res.status(201).json({
         success: response.success,
         message: response.message,
@@ -80,6 +81,7 @@ export default class ExpenseController {
   updateExpense = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
     const updatedData: ExpenseRequest = req.body;
+    const token = req.headers["authorization"] || "";
 
     if (!id) {
       return res.status(400).json({ message: "Expense ID is required." });
@@ -92,7 +94,7 @@ export default class ExpenseController {
     }
 
     try {
-      const success = await this.service.updateExpense(id, updatedData);
+      const success = await this.service.updateExpense(id, updatedData, token);
 
       if (success) {
         res.status(200).json({
@@ -110,12 +112,14 @@ export default class ExpenseController {
 
   deleteExpense = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
+    const token = req.headers["authorization"] || "";
+
     if (!id) {
       return res.status(400).json({ message: "Expense ID is required." });
     }
 
     try {
-      const result = await this.service.deleteExpense(id);
+      const result = await this.service.deleteExpense(id, token);
 
       if (result) {
         res.status(200).json({

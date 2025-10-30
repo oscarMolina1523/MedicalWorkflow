@@ -7,11 +7,13 @@ export interface IBillingService {
   getById(id: string): Promise<Billing | null>;
   getByAreaId(token: string): Promise<Billing[]>;
   addBilling(
-    billing: BillingRequest
+    billing: BillingRequest,
+    token:string
   ): Promise<ServiceResult<Billing>>;
   updateBilling(
     id: string,
-    billing: BillingRequest
+    billing: BillingRequest,
+    token:string
   ): Promise<ServiceResult<Billing | null>>;
-  deleteBilling(id: string): Promise<{ success: boolean; message: string }>;
+  deleteBilling(id: string, token:string): Promise<{ success: boolean; message: string }>;
 }

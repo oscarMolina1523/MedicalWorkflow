@@ -114,12 +114,14 @@ export default class PatientController {
 
   deletePatient = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
+    const token = req.headers["authorization"] || "";
+
     if (!id) {
       return res.status(400).json({ message: "Patient ID is required." });
     }
 
     try {
-      const result = await this.service.deletePatient(id);
+      const result = await this.service.deletePatient(id, token);
 
       if (result) {
         res.status(200).json({

@@ -7,11 +7,11 @@ export interface IExpenseService {
   getById(id: string): Promise<Expense | null>;
   getByAreaId(token: string): Promise<Expense[]>;
   addExpense(
-    expense: ExpenseRequest
+    expense: ExpenseRequest, token:string
   ): Promise<ServiceResult<Expense>>;
   updateExpense(
     id: string,
-    expense: ExpenseRequest
+    expense: ExpenseRequest, token:string
   ): Promise<ServiceResult<Expense | null>>;
-  deleteExpense(id: string): Promise<{ success: boolean; message: string }>;
+  deleteExpense(id: string, token:string): Promise<{ success: boolean; message: string }>;
 }

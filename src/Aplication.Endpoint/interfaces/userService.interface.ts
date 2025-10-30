@@ -10,5 +10,5 @@ export interface IUserService {
   getByAreaId(token: string): Promise<UserResponse[]>;
   addUser(user: UserRequest, token:string): Promise<ServiceResult<UserResponse>>;
   updateUser(id: string, user: UserRequest, token: string): Promise<ServiceResult<UserResponse | null>>;
-  deleteUser(id: string): Promise<{ success: boolean; message: string }>;
+  deleteUser(id:string , token:string): Promise<{ success: boolean; message: string }>;
 }
