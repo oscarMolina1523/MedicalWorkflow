@@ -43,6 +43,7 @@ export default class DepartmentController {
 
   addDepartment = async (req: Request, res: Response) => {
     const departmentDto: DepartmentRequest = req.body;
+    const token = req.headers["authorization"] || "";
 
     if (
       !departmentDto.name ||
@@ -53,7 +54,7 @@ export default class DepartmentController {
     }
 
     try {
-      const response = await this.service.addDepartment(departmentDto);
+      const response = await this.service.addDepartment(departmentDto, token);
       res.status(201).json({
         success: response.success,
         message: response.message,
@@ -67,6 +68,7 @@ export default class DepartmentController {
   updateDepartment = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
     const updatedData: DepartmentRequest = req.body;
+    const token = req.headers["authorization"] || "";
 
     if (!id) {
       return res.status(400).json({ message: "Department ID is required." });
@@ -79,7 +81,7 @@ export default class DepartmentController {
     }
 
     try {
-      const success = await this.service.updateDepartment(id, updatedData);
+      const success = await this.service.updateDepartment(id, updatedData, token);
 
       if (success) {
         res.status(200).json({
@@ -97,12 +99,14 @@ export default class DepartmentController {
 
   deleteDepartment = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
+    const token = req.headers["authorization"] || "";
+
     if (!id) {
       return res.status(400).json({ message: "Department ID is required." });
     }
 
     try {
-      const result = await this.service.deleteDepartment(id);
+      const result = await this.service.deleteDepartment(id, token);
 
       if (result) {
         res.status(200).json({
