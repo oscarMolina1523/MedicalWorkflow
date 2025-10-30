@@ -55,6 +55,7 @@ export default class BillingController {
 
   addBilling = async (req: Request, res: Response) => {
     const billingDto: BillingRequest = req.body;
+    const token = req.headers["authorization"] || "";
 
     if (
       !billingDto.departmentId ||
@@ -69,7 +70,7 @@ export default class BillingController {
     }
 
     try {
-      const response = await this.service.addBilling(billingDto);
+      const response = await this.service.addBilling(billingDto, token);
       res.status(201).json({
         success: response.success,
         message: response.message,
@@ -83,6 +84,7 @@ export default class BillingController {
   updateBilling = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
     const updatedData: BillingRequest = req.body;
+    const token = req.headers["authorization"] || "";
 
     if (!id) {
       return res.status(400).json({ message: "Billing ID is required." });
@@ -95,7 +97,7 @@ export default class BillingController {
     }
 
     try {
-      const success = await this.service.updateBilling(id, updatedData);
+      const success = await this.service.updateBilling(id, updatedData, token);
 
       if (success) {
         res.status(200).json({
@@ -113,12 +115,13 @@ export default class BillingController {
 
   deleteBilling = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
+    const token = req.headers["authorization"] || "";
     if (!id) {
       return res.status(400).json({ message: "Billing ID is required." });
     }
 
     try {
-      const result = await this.service.deleteBilling(id);
+      const result = await this.service.deleteBilling(id, token);
 
       if (result) {
         res.status(200).json({
