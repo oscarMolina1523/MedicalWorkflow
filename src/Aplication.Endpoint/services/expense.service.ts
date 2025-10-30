@@ -53,9 +53,7 @@ export default class ExpenseService implements IExpenseService {
     token: string
   ): Promise<ServiceResult<Expense>> {
     const currentUser = this.getCurrentUser(token);
-    if (!currentUser.departmentId) {
-      throw new Error("Department ID is required.");
-    }
+
     const newExpense = ExpenseMapper.toEntity(expense);
     await this._expenseRepository.create(newExpense);
 
@@ -77,10 +75,6 @@ export default class ExpenseService implements IExpenseService {
     expense: ExpenseRequest, token:string
   ): Promise<ServiceResult<Expense | null>> {
     const currentUser = this.getCurrentUser(token);
-
-    if (!currentUser.departmentId) {
-      throw new Error("Department ID is required.");
-    }
 
     const existing = await this._expenseRepository.getById(id);
     if (!existing) {
@@ -108,10 +102,6 @@ export default class ExpenseService implements IExpenseService {
     id: string, token:string
   ): Promise<{ success: boolean; message: string }> {
     const currentUser = this.getCurrentUser(token);
-
-    if (!currentUser.departmentId) {
-      throw new Error("Department ID is required.");
-    }
 
     const existing = await this._expenseRepository.getById(id);
     if (!existing) {

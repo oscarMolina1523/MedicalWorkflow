@@ -15,5 +15,5 @@ export interface IInventoryService {
     inventory: InventoryRequest,
     token: string
   ): Promise<ServiceResult<Inventory | null>>;
-  deleteInventory(id: string): Promise<{ success: boolean; message: string }>;
+  deleteInventory(id: string, token:string): Promise<{ success: boolean; message: string }>;
 }

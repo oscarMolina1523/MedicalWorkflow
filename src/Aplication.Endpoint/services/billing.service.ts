@@ -50,9 +50,6 @@ export default class BillingService implements IBillingService {
 
   async addBilling(billing: BillingRequest, token:string): Promise<ServiceResult<Billing>> {
     const currentUser = this.getCurrentUser(token);
-    if (!currentUser.departmentId) {
-      throw new Error("Department ID is required.");
-    }
 
     const newBilling = BillingMapper.toEntity(billing);
     await this._billingRepository.create(newBilling);
@@ -77,10 +74,6 @@ export default class BillingService implements IBillingService {
   ): Promise<ServiceResult<Billing | null>> {
 
     const currentUser = this.getCurrentUser(token);
-
-    if (!currentUser.departmentId) {
-      throw new Error("Department ID is required.");
-    }
 
     const existing = await this._billingRepository.getById(id);
     if (!existing) {
@@ -109,10 +102,6 @@ export default class BillingService implements IBillingService {
     token:string
   ): Promise<{ success: boolean; message: string }> {
     const currentUser = this.getCurrentUser(token);
-
-    if (!currentUser.departmentId) {
-      throw new Error("Department ID is required.");
-    }
 
     const existing = await this._billingRepository.getById(id);
     if (!existing) {

@@ -46,9 +46,6 @@ export default class DepartmentService implements IDepartmentService {
     token: string
   ): Promise<ServiceResult<Department>> {
     const currentUser = this.getCurrentUser(token);
-    if (!currentUser.departmentId) {
-      throw new Error("Department ID is required.");
-    }
 
     const newDepartment = DepartmentMapper.toEntity(department);
     await this._departmentRepository.create(newDepartment);
@@ -75,9 +72,6 @@ export default class DepartmentService implements IDepartmentService {
     department: DepartmentRequest, token:string
   ): Promise<ServiceResult<Department | null>> {
     const currentUser = this.getCurrentUser(token);
-    if (!currentUser.departmentId) {
-      throw new Error("Department ID is required.");
-    }
 
     const existing = await this._departmentRepository.getById(id);
 
@@ -115,9 +109,7 @@ export default class DepartmentService implements IDepartmentService {
     id: string, token:string
   ): Promise<{ success: boolean; message: string }> {
     const currentUser = this.getCurrentUser(token);
-    if (!currentUser.departmentId) {
-      throw new Error("Department ID is required.");
-    }
+
     const existing = await this._departmentRepository.getById(id);
     if (!existing) {
       return { success: false, message: "Department not found" };
