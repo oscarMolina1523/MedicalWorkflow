@@ -43,6 +43,7 @@ export default class MedicationController {
 
   addMedication = async (req: Request, res: Response) => {
     const medicationDto: MedicationRequest = req.body;
+    const token = req.headers["authorization"] || "";
 
     if (
       !medicationDto.name ||
@@ -53,7 +54,7 @@ export default class MedicationController {
     }
 
     try {
-      const response = await this.service.addMedication(medicationDto);
+      const response = await this.service.addMedication(medicationDto, token);
       res.status(201).json({
         success: response.success,
         message: response.message,
@@ -67,6 +68,7 @@ export default class MedicationController {
   updateMedication = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
     const updatedData: MedicationRequest = req.body;
+    const token = req.headers["authorization"] || "";
 
     if (!id) {
       return res.status(400).json({ message: "Medication ID is required." });
@@ -79,7 +81,11 @@ export default class MedicationController {
     }
 
     try {
-      const success = await this.service.updateMedication(id, updatedData);
+      const success = await this.service.updateMedication(
+        id,
+        updatedData,
+        token
+      );
 
       if (success) {
         res.status(200).json({
@@ -97,12 +103,14 @@ export default class MedicationController {
 
   deleteMedication = async (req: Request, res: Response) => {
     const id: string | undefined = req.params.id;
+    const token = req.headers["authorization"] || "";
+
     if (!id) {
       return res.status(400).json({ message: "Medication ID is required." });
     }
 
     try {
-      const result = await this.service.deleteMedication(id);
+      const result = await this.service.deleteMedication(id, token);
 
       if (result) {
         res.status(200).json({
