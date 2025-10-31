@@ -48,12 +48,15 @@ export default class BillingService implements IBillingService {
     return await this._billingRepository.getByAreaId(currentUser.departmentId);
   }
 
-  async addBilling(billing: BillingRequest, token:string): Promise<ServiceResult<Billing>> {
+  async addBilling(
+    billing: BillingRequest,
+    token: string
+  ): Promise<ServiceResult<Billing>> {
     const currentUser = this.getCurrentUser(token);
 
     const newBilling = BillingMapper.toEntity(billing);
     await this._billingRepository.create(newBilling);
-    
+
     const log = LOGMapper.toEntity({
       entity: "Billing",
       entityId: newBilling.id,
@@ -70,9 +73,8 @@ export default class BillingService implements IBillingService {
   async updateBilling(
     id: string,
     billing: BillingRequest,
-    token:string
+    token: string
   ): Promise<ServiceResult<Billing | null>> {
-
     const currentUser = this.getCurrentUser(token);
 
     const existing = await this._billingRepository.getById(id);
@@ -99,7 +101,7 @@ export default class BillingService implements IBillingService {
 
   async deleteBilling(
     id: string,
-    token:string
+    token: string
   ): Promise<{ success: boolean; message: string }> {
     const currentUser = this.getCurrentUser(token);
 
