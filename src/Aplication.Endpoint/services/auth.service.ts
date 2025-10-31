@@ -65,13 +65,10 @@ export default class AuthService implements IAuthService {
 
     const hashedPassword = await bcrypt.hash(user.password, 10);
 
-    const created = await this._userService.addUser(
-      {
-        ...user,
-        password: hashedPassword,
-      } as UserRequest,
-      "system"
-    );
+    const created = await this._userService.registerUser({
+      ...user,
+      password: hashedPassword,
+    });
 
     if (!created.success || !created.data) {
       return { success: false, message: "Error al registrar usuario" };
