@@ -9,6 +9,7 @@ export interface IUserService {
   getByEmail(email: string): Promise<User | null>;
   getByAreaId(token: string): Promise<UserResponse[]>;
   addUser(user: UserRequest, token:string): Promise<ServiceResult<UserResponse>>;
+  registerUser(user: UserRequest): Promise<ServiceResult<UserResponse>>;
   updateUser(id: string, user: UserRequest, token: string): Promise<ServiceResult<UserResponse | null>>;
   deleteUser(id:string , token:string): Promise<{ success: boolean; message: string }>;
 }
