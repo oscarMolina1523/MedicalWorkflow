@@ -53,6 +53,23 @@ export default class UserService implements IUserService {
     return await this._userRepository.getByAreaId(currentUser.departmentId);
   }
 
+  async registerUser(user: UserRequest): Promise<ServiceResult<UserResponse>> {
+    const newUser = UserMapper.toEntity(user, "system");
+    await this._userRepository.create(newUser);
+
+    const log = LOGMapper.toEntity({
+      entity: "User",
+      entityId: newUser.id,
+      action: Action.CREATE,
+      changes: "Register new user (public)",
+      performedBy: "system",
+    });
+
+    await this._logRepository.create(log);
+
+    return { success: true, message: "User registered", data: newUser };
+  }
+
   async addUser(
     user: UserRequest,
     token: string
@@ -103,7 +120,10 @@ export default class UserService implements IUserService {
     return { success: true, message: "User updated", data: updatedUser };
   }
 
-  async deleteUser(id: string, token:string): Promise<{ success: boolean; message: string }> {
+  async deleteUser(
+    id: string,
+    token: string
+  ): Promise<{ success: boolean; message: string }> {
     const currentUser = this.getCurrentUser(token);
 
     const existing = await this._userRepository.getById(id);
