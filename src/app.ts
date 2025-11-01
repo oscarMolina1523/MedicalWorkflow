@@ -51,12 +51,12 @@ app.use("/kpis", validateToken, kpiRoutes);
 async function startServer() {
   try {
     await initializeDatabase();
-    app.listen(PORT, () => {
-      console.log(`Servidor Express corriendo en http://localhost:${PORT}`);
-      console.log(
-        `Documentación de Swagger en http://localhost:${PORT}/api-docs`
-      );
-    });
+    // app.listen(PORT, () => {
+    //   console.log(`Servidor Express corriendo en http://localhost:${PORT}`);
+    //   console.log(
+    //     `Documentación de Swagger en http://localhost:${PORT}/api-docs`
+    //   );
+    // });
   } catch(error) {
     console.error("Error al iniciar el servidor:", error);
     process.exit(1);
