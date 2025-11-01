@@ -2,12 +2,12 @@
   "name": "medical",
   "version": "1.0.0",
   "main": "dist/app.js",
-   "type": "module",
+  "type": "module",
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/app.js",
     "dev": "ts-node src/app.ts",
-    "start": "node dist/app.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
