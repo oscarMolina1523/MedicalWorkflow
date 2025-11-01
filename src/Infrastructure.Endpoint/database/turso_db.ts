@@ -441,17 +441,19 @@ BEGIN
     VALUE = VALUE + NEW.AMOUNT, -- SUMAR el nuevo monto de BILLING al valor existente
     CREATED_AT = DATETIME('now','localtime');
 
-  -- KPI anual de profit
+  -- KPI anual de profit (Actualización incremental)
   INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
-  SELECT
+  VALUES (
     hex(randomblob(16)),
     'profit_year_' || strftime('%Y', NEW.CREATED_AT),
-    COALESCE((SELECT SUM(AMOUNT) FROM BILLING WHERE strftime('%Y', CREATED_AT)=strftime('%Y', NEW.CREATED_AT)),0)
-    - COALESCE((SELECT SUM(AMOUNT) FROM EXPENSES WHERE strftime('%Y', CREATED_AT)=strftime('%Y', NEW.CREATED_AT)),0),
+    NEW.AMOUNT, -- Solo el nuevo monto de BILLING (Ganancia)
     DATE(NEW.CREATED_AT),
-    DATETIME('now'),
+    DATETIME('now','localtime'),
     'system'
-  ON CONFLICT(NAME) DO UPDATE SET VALUE=excluded.VALUE, CREATED_AT=excluded.CREATED_AT;
+  )
+  ON CONFLICT(NAME) DO UPDATE SET
+    VALUE = VALUE + NEW.AMOUNT, -- SUMAR el nuevo monto de BILLING al valor existente
+    CREATED_AT = DATETIME('now','localtime');
 END;
 `);
 
