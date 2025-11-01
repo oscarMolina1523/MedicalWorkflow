@@ -32,10 +32,14 @@ export const OpenApiSpecification = {
     description: "API to manage the workflow of an entire hospital with at least 10 departments, a board of directors, and a CEO, in roles, access, and permissions.",
   },
   servers: [
+    // {
+    //   url: "http://localhost:3000",
+    //   description: "Local server",
+    // },
     {
-      url: "http://localhost:3000",
-      description: "Local server",
-    },
+      url:"https://hospital-1cq9.onrender.com",
+      description:"Server production"
+    }
   ],
   security: [
     {
