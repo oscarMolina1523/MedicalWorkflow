@@ -30,9 +30,7 @@ app.use(cors());
 app.use(
   "/api-docs",
   apiReference({
-    spec: {
-      content: OpenApiSpecification,
-    },
+    spec: OpenApiSpecification,
   })
 );
 
@@ -66,3 +64,5 @@ async function startServer() {
 }
 
 startServer();
+
+export default app;
