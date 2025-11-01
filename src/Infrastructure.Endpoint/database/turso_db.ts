@@ -352,7 +352,7 @@ export async function initializeDatabase(): Promise<void> {
     await db.execute(`
       CREATE TABLE IF NOT EXISTS KPI (
         ID TEXT PRIMARY KEY,
-        NAME TEXT NOT NULL,
+        NAME TEXT NOT NULL UNIQUE,
         DEPARTMENT_ID TEXT,
         VALUE REAL NOT NULL,
         METRIC_DATE TEXT NOT NULL,
@@ -363,121 +363,226 @@ export async function initializeDatabase(): Promise<void> {
     console.log("✅ Tabla KPI creada (sin datos).");
 
     // TRIGGERS: KPIs automáticos (globales, sin departamento)
-    // ---------------------------
+// ---------------------------
 
-    // 📅 Diario
-    await db.execute(`
-      CREATE TRIGGER IF NOT EXISTS trg_kpi_daily
-      AFTER INSERT ON BILLING
-      BEGIN
-        DELETE FROM KPI
-        WHERE NAME='DAILY_PROFIT'
-          AND METRIC_DATE=DATE(NEW.PAID_AT);
+// ---------------------------
+// KPI
+// ---------------------------
 
-        INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
-        VALUES (
-          LOWER(HEX(RANDOMBLOB(16))),
-          'DAILY_PROFIT',
-          (
-            (SELECT IFNULL(SUM(B.AMOUNT),0) FROM BILLING B WHERE DATE(B.PAID_AT)=DATE(NEW.PAID_AT))
-            -
-            (SELECT IFNULL(SUM(E.AMOUNT),0) FROM EXPENSES E WHERE DATE(E.CREATED_AT)=DATE(NEW.PAID_AT))
-          ),
-          DATE(NEW.PAID_AT),
-          DATETIME('now'),
-          'system'
-        );
-      END;
-    `);
+// 🔹 Crear índice único para permitir UPSERT
+await db.execute(`
+  CREATE UNIQUE INDEX IF NOT EXISTS idx_kpi_name_date ON KPI(NAME, METRIC_DATE);
+`);
 
-    // 📅 Semanal
-    await db.execute(`
-      CREATE TRIGGER IF NOT EXISTS trg_kpi_weekly
-      AFTER INSERT ON BILLING
-      BEGIN
-        DELETE FROM KPI
-        WHERE NAME='WEEKLY_PROFIT'
-          AND METRIC_DATE=DATE(NEW.PAID_AT,'weekday 0','-6 days'); -- lunes
+// 📅 Diario - Profit
+await db.execute(`
+  CREATE TRIGGER IF NOT EXISTS trg_kpi_daily_profit
+  AFTER INSERT ON BILLING
+  BEGIN
+    INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
+    VALUES (
+      LOWER(HEX(RANDOMBLOB(16))),
+      'DAILY_PROFIT',
+      (SELECT IFNULL(SUM(B.AMOUNT),0) - IFNULL(SUM(E.AMOUNT),0)
+       FROM BILLING B
+       LEFT JOIN EXPENSES E ON DATE(E.CREATED_AT)=DATE(NEW.PAID_AT)
+       WHERE DATE(B.PAID_AT)=DATE(NEW.PAID_AT)),
+      DATE(NEW.PAID_AT),
+      DATETIME('now'),
+      'system'
+    )
+    ON CONFLICT(NAME, METRIC_DATE) DO UPDATE SET
+      VALUE = (SELECT IFNULL(SUM(B.AMOUNT),0) - IFNULL(SUM(E.AMOUNT),0)
+               FROM BILLING B
+               LEFT JOIN EXPENSES E ON DATE(E.CREATED_AT)=DATE(NEW.PAID_AT)
+               WHERE DATE(B.PAID_AT)=DATE(NEW.PAID_AT)),
+      CREATED_AT = DATETIME('now');
+  END;
+`);
 
-        INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
-        VALUES (
-          LOWER(HEX(RANDOMBLOB(16))),
-          'WEEKLY_PROFIT',
-          (
-            (SELECT IFNULL(SUM(B.AMOUNT),0)
-            FROM BILLING B
-            WHERE DATE(B.PAID_AT) BETWEEN DATE(NEW.PAID_AT,'weekday 0','-6 days') AND DATE(NEW.PAID_AT))
-            -
-            (SELECT IFNULL(SUM(E.AMOUNT),0)
-            FROM EXPENSES E
-            WHERE DATE(E.CREATED_AT) BETWEEN DATE(NEW.PAID_AT,'weekday 0','-6 days') AND DATE(NEW.PAID_AT))
-          ),
-          DATE(NEW.PAID_AT,'weekday 0','-6 days'),
-          DATETIME('now'),
-          'system'
-        );
-      END;
-    `);
+// 📅 Diario - Expenses
+await db.execute(`
+  CREATE TRIGGER IF NOT EXISTS trg_kpi_daily_expense
+  AFTER INSERT ON EXPENSES
+  BEGIN
+    INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
+    VALUES (
+      LOWER(HEX(RANDOMBLOB(16))),
+      'DAILY_EXPENSE',
+      (SELECT IFNULL(SUM(E.AMOUNT),0)
+       FROM EXPENSES E
+       WHERE DATE(E.CREATED_AT)=DATE(NEW.CREATED_AT)),
+      DATE(NEW.CREATED_AT),
+      DATETIME('now'),
+      'system'
+    )
+    ON CONFLICT(NAME, METRIC_DATE) DO UPDATE SET
+      VALUE = (SELECT IFNULL(SUM(E.AMOUNT),0)
+               FROM EXPENSES E
+               WHERE DATE(E.CREATED_AT)=DATE(NEW.CREATED_AT)),
+      CREATED_AT = DATETIME('now');
+  END;
+`);
 
-    // 📅 Mensual
-    await db.execute(`
-      CREATE TRIGGER IF NOT EXISTS trg_kpi_monthly
-      AFTER INSERT ON BILLING
-      BEGIN
-        DELETE FROM KPI
-        WHERE NAME='MONTHLY_PROFIT'
-          AND METRIC_DATE=DATE(NEW.PAID_AT,'start of month');
+// 📅 Semanal - Profit
+await db.execute(`
+  CREATE TRIGGER IF NOT EXISTS trg_kpi_weekly_profit
+  AFTER INSERT ON BILLING
+  BEGIN
+    INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
+    VALUES (
+      LOWER(HEX(RANDOMBLOB(16))),
+      'WEEKLY_PROFIT',
+      (SELECT IFNULL(SUM(B.AMOUNT),0) - IFNULL(SUM(E.AMOUNT),0)
+       FROM BILLING B
+       LEFT JOIN EXPENSES E 
+       ON DATE(E.CREATED_AT) BETWEEN DATE(NEW.PAID_AT,'weekday 0','-6 days') AND DATE(NEW.PAID_AT)
+       WHERE DATE(B.PAID_AT) BETWEEN DATE(NEW.PAID_AT,'weekday 0','-6 days') AND DATE(NEW.PAID_AT)),
+      DATE(NEW.PAID_AT,'weekday 0','-6 days'),
+      DATETIME('now'),
+      'system'
+    )
+    ON CONFLICT(NAME, METRIC_DATE) DO UPDATE SET
+      VALUE = (SELECT IFNULL(SUM(B.AMOUNT),0) - IFNULL(SUM(E.AMOUNT),0)
+               FROM BILLING B
+               LEFT JOIN EXPENSES E 
+               ON DATE(E.CREATED_AT) BETWEEN DATE(NEW.PAID_AT,'weekday 0','-6 days') AND DATE(NEW.PAID_AT)
+               WHERE DATE(B.PAID_AT) BETWEEN DATE(NEW.PAID_AT,'weekday 0','-6 days') AND DATE(NEW.PAID_AT)),
+      CREATED_AT = DATETIME('now');
+  END;
+`);
 
-        INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
-        VALUES (
-          LOWER(HEX(RANDOMBLOB(16))),
-          'MONTHLY_PROFIT',
-          (
-            (SELECT IFNULL(SUM(B.AMOUNT),0)
-            FROM BILLING B
-            WHERE strftime('%Y-%m',B.PAID_AT)=strftime('%Y-%m',NEW.PAID_AT))
-            -
-            (SELECT IFNULL(SUM(E.AMOUNT),0)
-            FROM EXPENSES E
-            WHERE strftime('%Y-%m',E.CREATED_AT)=strftime('%Y-%m',NEW.PAID_AT))
-          ),
-          DATE(NEW.PAID_AT,'start of month'),
-          DATETIME('now'),
-          'system'
-        );
-      END;
-    `);
+// 📅 Semanal - Expenses
+await db.execute(`
+  CREATE TRIGGER IF NOT EXISTS trg_kpi_weekly_expense
+  AFTER INSERT ON EXPENSES
+  BEGIN
+    INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
+    VALUES (
+      LOWER(HEX(RANDOMBLOB(16))),
+      'WEEKLY_EXPENSE',
+      (SELECT IFNULL(SUM(E.AMOUNT),0)
+       FROM EXPENSES E
+       WHERE DATE(E.CREATED_AT) BETWEEN DATE(NEW.CREATED_AT,'weekday 0','-6 days') AND DATE(NEW.CREATED_AT)),
+      DATE(NEW.CREATED_AT,'weekday 0','-6 days'),
+      DATETIME('now'),
+      'system'
+    )
+    ON CONFLICT(NAME, METRIC_DATE) DO UPDATE SET
+      VALUE = (SELECT IFNULL(SUM(E.AMOUNT),0)
+               FROM EXPENSES E
+               WHERE DATE(E.CREATED_AT) BETWEEN DATE(NEW.CREATED_AT,'weekday 0','-6 days') AND DATE(NEW.CREATED_AT)),
+      CREATED_AT = DATETIME('now');
+  END;
+`);
 
-    // 📅 Anual
-    await db.execute(`
-      CREATE TRIGGER IF NOT EXISTS trg_kpi_yearly
-      AFTER INSERT ON BILLING
-      BEGIN
-        DELETE FROM KPI
-        WHERE NAME='YEARLY_PROFIT'
-          AND METRIC_DATE=DATE(NEW.PAID_AT,'start of year');
+// 📅 Mensual - Profit
+await db.execute(`
+  CREATE TRIGGER IF NOT EXISTS trg_kpi_monthly_profit
+  AFTER INSERT ON BILLING
+  BEGIN
+    INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
+    VALUES (
+      LOWER(HEX(RANDOMBLOB(16))),
+      'MONTHLY_PROFIT',
+      (SELECT IFNULL(SUM(B.AMOUNT),0) - IFNULL(SUM(E.AMOUNT),0)
+       FROM BILLING B
+       LEFT JOIN EXPENSES E 
+       ON strftime('%Y-%m',E.CREATED_AT)=strftime('%Y-%m',NEW.PAID_AT)
+       WHERE strftime('%Y-%m',B.PAID_AT)=strftime('%Y-%m',NEW.PAID_AT)),
+      DATE(NEW.PAID_AT,'start of month'),
+      DATETIME('now'),
+      'system'
+    )
+    ON CONFLICT(NAME, METRIC_DATE) DO UPDATE SET
+      VALUE = (SELECT IFNULL(SUM(B.AMOUNT),0) - IFNULL(SUM(E.AMOUNT),0)
+               FROM BILLING B
+               LEFT JOIN EXPENSES E 
+               ON strftime('%Y-%m',E.CREATED_AT)=strftime('%Y-%m',NEW.PAID_AT)
+               WHERE strftime('%Y-%m',B.PAID_AT)=strftime('%Y-%m',NEW.PAID_AT)),
+      CREATED_AT = DATETIME('now');
+  END;
+`);
 
-        INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
-        VALUES (
-          LOWER(HEX(RANDOMBLOB(16))),
-          'YEARLY_PROFIT',
-          (
-            (SELECT IFNULL(SUM(B.AMOUNT),0)
-            FROM BILLING B
-            WHERE strftime('%Y',B.PAID_AT)=strftime('%Y',NEW.PAID_AT))
-            -
-            (SELECT IFNULL(SUM(E.AMOUNT),0)
-            FROM EXPENSES E
-            WHERE strftime('%Y',E.CREATED_AT)=strftime('%Y',NEW.PAID_AT))
-          ),
-          DATE(NEW.PAID_AT,'start of year'),
-          DATETIME('now'),
-          'system'
-        );
-      END;
-    `);
+// 📅 Mensual - Expenses
+await db.execute(`
+  CREATE TRIGGER IF NOT EXISTS trg_kpi_monthly_expense
+  AFTER INSERT ON EXPENSES
+  BEGIN
+    INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
+    VALUES (
+      LOWER(HEX(RANDOMBLOB(16))),
+      'MONTHLY_EXPENSE',
+      (SELECT IFNULL(SUM(E.AMOUNT),0)
+       FROM EXPENSES E
+       WHERE strftime('%Y-%m',E.CREATED_AT)=strftime('%Y-%m',NEW.CREATED_AT)),
+      DATE(NEW.CREATED_AT,'start of month'),
+      DATETIME('now'),
+      'system'
+    )
+    ON CONFLICT(NAME, METRIC_DATE) DO UPDATE SET
+      VALUE = (SELECT IFNULL(SUM(E.AMOUNT),0)
+               FROM EXPENSES E
+               WHERE strftime('%Y-%m',E.CREATED_AT)=strftime('%Y-%m',NEW.CREATED_AT)),
+      CREATED_AT = DATETIME('now');
+  END;
+`);
 
-    console.log("✅ Triggers KPI creados correctamente.");
+// 📅 Anual - Profit
+await db.execute(`
+  CREATE TRIGGER IF NOT EXISTS trg_kpi_yearly_profit
+  AFTER INSERT ON BILLING
+  BEGIN
+    INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
+    VALUES (
+      LOWER(HEX(RANDOMBLOB(16))),
+      'YEARLY_PROFIT',
+      (SELECT IFNULL(SUM(B.AMOUNT),0) - IFNULL(SUM(E.AMOUNT),0)
+       FROM BILLING B
+       LEFT JOIN EXPENSES E 
+       ON strftime('%Y',E.CREATED_AT)=strftime('%Y',NEW.PAID_AT)
+       WHERE strftime('%Y',B.PAID_AT)=strftime('%Y',NEW.PAID_AT)),
+      DATE(NEW.PAID_AT,'start of year'),
+      DATETIME('now'),
+      'system'
+    )
+    ON CONFLICT(NAME, METRIC_DATE) DO UPDATE SET
+      VALUE = (SELECT IFNULL(SUM(B.AMOUNT),0) - IFNULL(SUM(E.AMOUNT),0)
+               FROM BILLING B
+               LEFT JOIN EXPENSES E 
+               ON strftime('%Y',E.CREATED_AT)=strftime('%Y',NEW.PAID_AT)
+               WHERE strftime('%Y',B.PAID_AT)=strftime('%Y',NEW.PAID_AT)),
+      CREATED_AT = DATETIME('now');
+  END;
+`);
+
+// 📅 Anual - Expenses
+await db.execute(`
+  CREATE TRIGGER IF NOT EXISTS trg_kpi_yearly_expense
+  AFTER INSERT ON EXPENSES
+  BEGIN
+    INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
+    VALUES (
+      LOWER(HEX(RANDOMBLOB(16))),
+      'YEARLY_EXPENSE',
+      (SELECT IFNULL(SUM(E.AMOUNT),0)
+       FROM EXPENSES E
+       WHERE strftime('%Y',E.CREATED_AT)=strftime('%Y',NEW.CREATED_AT)),
+      DATE(NEW.CREATED_AT,'start of year'),
+      DATETIME('now'),
+      'system'
+    )
+    ON CONFLICT(NAME, METRIC_DATE) DO UPDATE SET
+      VALUE = (SELECT IFNULL(SUM(E.AMOUNT),0)
+               FROM EXPENSES E
+               WHERE strftime('%Y',E.CREATED_AT)=strftime('%Y',NEW.CREATED_AT)),
+      CREATED_AT = DATETIME('now');
+  END;
+`);
+
+console.log("✅ Triggers KPI creados correctamente (Profit y Expenses).");
+
+
 
     // ---------------------------
     // AUDIT_LOGS

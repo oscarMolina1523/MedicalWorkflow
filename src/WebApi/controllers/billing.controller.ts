@@ -76,7 +76,8 @@ export default class BillingController {
         message: response.message,
         status: response.data,
       });
-    } catch {
+    } catch(error) {
+      console.log("error controller:" , error);
       res.status(400).json({ message: "Failed to add the billing" });
     }
   };
