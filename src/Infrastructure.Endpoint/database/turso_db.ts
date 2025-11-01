@@ -413,29 +413,33 @@ BEGIN
     VALUE = VALUE - COALESCE((SELECT SUM(AMOUNT) FROM EXPENSES WHERE DATE(CREATED_AT) = DATE(NEW.CREATED_AT)),0),
     CREATED_AT = DATETIME('now','localtime');
 
-  -- KPI semanal de profit
+  -- KPI semanal de profit (Actualización incremental)
   INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
-  SELECT
+  VALUES (
     hex(randomblob(16)),
     'profit_week_' || strftime('%W', NEW.CREATED_AT) || '-' || strftime('%Y', NEW.CREATED_AT),
-    COALESCE((SELECT SUM(AMOUNT) FROM BILLING WHERE strftime('%W', CREATED_AT)=strftime('%W', NEW.CREATED_AT) AND strftime('%Y', CREATED_AT)=strftime('%Y', NEW.CREATED_AT)),0)
-    - COALESCE((SELECT SUM(AMOUNT) FROM EXPENSES WHERE strftime('%W', CREATED_AT)=strftime('%W', NEW.CREATED_AT) AND strftime('%Y', CREATED_AT)=strftime('%Y', NEW.CREATED_AT)),0),
+    NEW.AMOUNT, -- Solo el nuevo monto de BILLING (Ganancia)
     DATE(NEW.CREATED_AT),
-    DATETIME('now'),
+    DATETIME('now','localtime'),
     'system'
-  ON CONFLICT(NAME) DO UPDATE SET VALUE=excluded.VALUE, CREATED_AT=excluded.CREATED_AT;
+  )
+  ON CONFLICT(NAME) DO UPDATE SET
+    VALUE = VALUE + NEW.AMOUNT, -- SUMAR el nuevo monto de BILLING
+    CREATED_AT = DATETIME('now','localtime');
 
-  -- KPI mensual de profit
+  -- KPI mensual de profit (Actualización incremental)
   INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
-  SELECT
+  VALUES (
     hex(randomblob(16)),
     'profit_month_' || strftime('%m', NEW.CREATED_AT) || '-' || strftime('%Y', NEW.CREATED_AT),
-    COALESCE((SELECT SUM(AMOUNT) FROM BILLING WHERE strftime('%m', CREATED_AT)=strftime('%m', NEW.CREATED_AT) AND strftime('%Y', CREATED_AT)=strftime('%Y', NEW.CREATED_AT)),0)
-    - COALESCE((SELECT SUM(AMOUNT) FROM EXPENSES WHERE strftime('%m', CREATED_AT)=strftime('%m', NEW.CREATED_AT) AND strftime('%Y', CREATED_AT)=strftime('%Y', NEW.CREATED_AT)),0),
+    NEW.AMOUNT, -- Solo el nuevo monto de BILLING (Ganancia)
     DATE(NEW.CREATED_AT),
-    DATETIME('now'),
+    DATETIME('now','localtime'),
     'system'
-  ON CONFLICT(NAME) DO UPDATE SET VALUE=excluded.VALUE, CREATED_AT=excluded.CREATED_AT;
+  )
+  ON CONFLICT(NAME) DO UPDATE SET
+    VALUE = VALUE + NEW.AMOUNT, -- SUMAR el nuevo monto de BILLING al valor existente
+    CREATED_AT = DATETIME('now','localtime');
 
   -- KPI anual de profit
   INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
