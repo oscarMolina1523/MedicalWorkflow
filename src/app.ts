@@ -30,7 +30,9 @@ app.use(cors());
 app.use(
   "/api-docs",
   apiReference({
-    spec: OpenApiSpecification,
+    spec: {
+      content: OpenApiSpecification,
+    },
   })
 );
 
