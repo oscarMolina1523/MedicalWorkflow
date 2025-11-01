@@ -455,19 +455,22 @@ END;
     // Trigger para EXPENSES
     // ---------------------------
     await db.execute(`
-CREATE TRIGGER IF NOT EXISTS trg_expenses_after_insert
+CREATE TRIGGER IF NOT EXISTS trg_expenses_daily_after_insert
 AFTER INSERT ON EXPENSES
 BEGIN
-  -- KPI diario de expenses
+  -- Sumar nuevo gasto al KPI diario
   INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
-  SELECT
+  VALUES (
     hex(randomblob(16)),
     'expenses_' || DATE(NEW.CREATED_AT),
-    COALESCE((SELECT SUM(AMOUNT) FROM EXPENSES WHERE DATE(CREATED_AT)=DATE(NEW.CREATED_AT)),0),
+    NEW.AMOUNT, -- Solo usa el monto del nuevo registro
     DATE(NEW.CREATED_AT),
-    DATETIME('now'),
+    DATETIME('now','localtime'),
     'system'
-  ON CONFLICT(NAME) DO UPDATE SET VALUE=excluded.VALUE, CREATED_AT=excluded.CREATED_AT;
+  )
+  ON CONFLICT(NAME) DO UPDATE SET
+    VALUE = VALUE + NEW.AMOUNT, -- SUMA el monto del nuevo registro al valor existente
+    CREATED_AT = DATETIME('now','localtime');
 
   -- KPI semanal de expenses
   INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
