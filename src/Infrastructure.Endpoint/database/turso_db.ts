@@ -478,38 +478,50 @@ BEGIN
     VALUE = VALUE + NEW.AMOUNT, -- SUMA el monto del nuevo registro al valor existente
     CREATED_AT = DATETIME('now','localtime');
 
-  -- KPI semanal de expenses
+
+  -- KPI semanal de expenses (Actualización incremental)
   INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
-  SELECT
+  VALUES (
     hex(randomblob(16)),
     'expenses_week_' || strftime('%W', NEW.CREATED_AT) || '-' || strftime('%Y', NEW.CREATED_AT),
-    COALESCE((SELECT SUM(AMOUNT) FROM EXPENSES WHERE strftime('%W', CREATED_AT)=strftime('%W', NEW.CREATED_AT) AND strftime('%Y', CREATED_AT)=strftime('%Y', NEW.CREATED_AT)),0),
+    NEW.AMOUNT, -- Solo el monto del nuevo gasto
     DATE(NEW.CREATED_AT),
-    DATETIME('now'),
+    DATETIME('now','localtime'),
     'system'
-  ON CONFLICT(NAME) DO UPDATE SET VALUE=excluded.VALUE, CREATED_AT=excluded.CREATED_AT;
+  )
+  ON CONFLICT(NAME) DO UPDATE SET
+    VALUE = VALUE + NEW.AMOUNT, -- SUMAR el nuevo gasto al valor existente
+    CREATED_AT = DATETIME('now','localtime');
 
-  -- KPI mensual de expenses
+
+  -- KPI mensual de expenses (Actualización incremental)
   INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
-  SELECT
+  VALUES (
     hex(randomblob(16)),
     'expenses_month_' || strftime('%m', NEW.CREATED_AT) || '-' || strftime('%Y', NEW.CREATED_AT),
-    COALESCE((SELECT SUM(AMOUNT) FROM EXPENSES WHERE strftime('%m', CREATED_AT)=strftime('%m', NEW.CREATED_AT) AND strftime('%Y', CREATED_AT)=strftime('%Y', NEW.CREATED_AT)),0),
+    NEW.AMOUNT, -- Solo el monto del nuevo gasto
     DATE(NEW.CREATED_AT),
-    DATETIME('now'),
+    DATETIME('now','localtime'),
     'system'
-  ON CONFLICT(NAME) DO UPDATE SET VALUE=excluded.VALUE, CREATED_AT=excluded.CREATED_AT;
+  )
+  ON CONFLICT(NAME) DO UPDATE SET
+    VALUE = VALUE + NEW.AMOUNT, -- SUMAR el nuevo gasto al valor existente
+    CREATED_AT = DATETIME('now','localtime');
+    
 
-  -- KPI anual de expenses
+  -- KPI anual de expenses (Actualización incremental)
   INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
-  SELECT
+  VALUES (
     hex(randomblob(16)),
     'expenses_year_' || strftime('%Y', NEW.CREATED_AT),
-    COALESCE((SELECT SUM(AMOUNT) FROM EXPENSES WHERE strftime('%Y', CREATED_AT)=strftime('%Y', NEW.CREATED_AT)),0),
+    NEW.AMOUNT, -- Solo el monto del nuevo gasto
     DATE(NEW.CREATED_AT),
-    DATETIME('now'),
+    DATETIME('now','localtime'),
     'system'
-  ON CONFLICT(NAME) DO UPDATE SET VALUE=excluded.VALUE, CREATED_AT=excluded.CREATED_AT;
+  )
+  ON CONFLICT(NAME) DO UPDATE SET
+    VALUE = VALUE + NEW.AMOUNT, -- SUMAR el nuevo gasto al valor existente
+    CREATED_AT = DATETIME('now','localtime');
 END;
 `);
 
