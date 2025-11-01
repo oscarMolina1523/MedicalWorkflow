@@ -382,27 +382,36 @@ export async function initializeDatabase(): Promise<void> {
     // Triggers para BILLING
     // ---------------------------
     await db.execute(`
-CREATE TRIGGER IF NOT EXISTS trg_billing_after_insert
+CREATE TRIGGER IF NOT EXISTS trg_profit_daily_after_insert
 AFTER INSERT ON BILLING
 BEGIN
-  -- Guardamos la fecha en formato YYYY-MM-DD
+  -- Sumar nuevo billing
   INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
-  SELECT 
+  VALUES (
     hex(randomblob(16)),
     'profit_' || DATE(NEW.CREATED_AT),
-    (SELECT COALESCE(SUM(AMOUNT),0) FROM BILLING WHERE DATE(CREATED_AT) = DATE(NEW.CREATED_AT))
-    - (SELECT COALESCE(SUM(AMOUNT),0) FROM EXPENSES WHERE DATE(CREATED_AT) = DATE(NEW.CREATED_AT)),
+    NEW.AMOUNT,
     DATE(NEW.CREATED_AT),
     DATETIME('now','localtime'),
     'system'
-  ON CONFLICT(NAME) DO UPDATE SET 
-    VALUE = (
-      (SELECT COALESCE(SUM(AMOUNT),0) FROM BILLING WHERE DATE(CREATED_AT) = DATE(NEW.CREATED_AT))
-      - (SELECT COALESCE(SUM(AMOUNT),0) FROM EXPENSES WHERE DATE(CREATED_AT) = DATE(NEW.CREATED_AT))
-    ),
+  )
+  ON CONFLICT(NAME) DO UPDATE SET
+    VALUE = VALUE + NEW.AMOUNT,
     CREATED_AT = DATETIME('now','localtime');
 
-
+  -- Restar expenses del día correspondiente
+  INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
+  VALUES (
+    hex(randomblob(16)),
+    'profit_' || DATE(NEW.CREATED_AT),
+    -COALESCE((SELECT SUM(AMOUNT) FROM EXPENSES WHERE DATE(CREATED_AT) = DATE(NEW.CREATED_AT)),0),
+    DATE(NEW.CREATED_AT),
+    DATETIME('now','localtime'),
+    'system'
+  )
+  ON CONFLICT(NAME) DO UPDATE SET
+    VALUE = VALUE - COALESCE((SELECT SUM(AMOUNT) FROM EXPENSES WHERE DATE(CREATED_AT) = DATE(NEW.CREATED_AT)),0),
+    CREATED_AT = DATETIME('now','localtime');
 
   -- KPI semanal de profit
   INSERT INTO KPI (ID, NAME, VALUE, METRIC_DATE, CREATED_AT, CREATED_BY)
