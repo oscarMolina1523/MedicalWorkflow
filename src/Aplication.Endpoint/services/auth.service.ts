@@ -34,12 +34,12 @@ export default class AuthService implements IAuthService {
   ): Promise<AuthResult<UserResponse>> {
     const user = await this._userService.getByEmail(email);
     if (!user) {
-      return { message: "Usuario incorrecto" };
+      return { message: "Usuario no encontrado" };
     }
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      return { message: "Credenciales inválidas" };
+      return { message: "Credenciales no validas" };
     }
 
     const data = UserMapper.toPublic(user);
