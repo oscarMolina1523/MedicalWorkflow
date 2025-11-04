@@ -43,9 +43,10 @@ export default class AuthController {
 
       const result = await this._authService.register(data);
 
-      res.status(201).json({
+      res.status(result.success ? 201 : 400).json({
+        success: result.success,
         message: result.message,
-        user: result.data,
+        user: result.data || null,
       });
     } catch (error) {
       res.status(500).json({ message: "Error al registrar usuario", error });
