@@ -17,7 +17,7 @@ import medicationRoutes from "./WebApi/routes/medication.routes";
 import kpiRoutes from "./WebApi/routes/kpi.routes";
 import { initializeDatabase } from "./Infrastructure.Endpoint/database/turso_db";
 import { OpenApiSpecification } from "./WebApi/documentation/openapi";
-import { apiReference } from "@scalar/express-api-reference";
+//import { apiReference } from "@scalar/express-api-reference";
 import { validateToken } from "./WebApi/middlewares/auth.middleware";
 
 const app = express();
@@ -27,14 +27,31 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 
-app.use(
-  "/api-docs",
-  apiReference({
-    spec: {
-      content: OpenApiSpecification,
-    },
-  })
-);
+// app.use(
+//   "/api-docs",
+//   apiReference({
+//     spec: {
+//       content: OpenApiSpecification,
+//     },
+//   })
+// );
+
+(async () => {
+  try {
+    const { apiReference } = await import("@scalar/express-api-reference");
+
+    app.use(
+      "/api-docs",
+      apiReference({
+        spec: {
+          content: OpenApiSpecification,
+        },
+      })
+    );
+  } catch (error) {
+    console.error("Error al cargar la documentación de API:", error);
+  }
+})();
 
 app.use("/auth", authRoutes);
 app.use("/users", validateToken, userRoutes);
