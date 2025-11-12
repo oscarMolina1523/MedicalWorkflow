@@ -50,26 +50,36 @@ app.use("/expenses", validateToken, expenseRoutes);
 app.use("/medications", validateToken, medicationRoutes);
 app.use("/kpis", validateToken, kpiRoutes);
 
+// Inicializa la base de datos una sola vez antes de responder
+let initialized = false;
+app.use(async (req, res, next) => {
+  if (!initialized) {
+    await initializeDatabase();
+    initialized = true;
+  }
+  next();
+});
+
 // Ruta raíz para evitar 404
 app.get("/", (req, res) => {
   res.json({ message: "API funcionando!" });
 });
 
-async function startServer() {
-  try {
-    await initializeDatabase();
-    app.listen(PORT, () => {
-      console.log(`Servidor Express corriendo en http://localhost:${PORT}`);
-      console.log(
-        `Documentación de Swagger en http://localhost:${PORT}/api-docs`
-      );
-    });
-  } catch(error) {
-    console.error("Error al iniciar el servidor:", error);
-    process.exit(1);
-  }
-}
+// async function startServer() {
+//   try {
+//     await initializeDatabase();
+//     app.listen(PORT, () => {
+//       console.log(`Servidor Express corriendo en http://localhost:${PORT}`);
+//       console.log(
+//         `Documentación de Swagger en http://localhost:${PORT}/api-docs`
+//       );
+//     });
+//   } catch(error) {
+//     console.error("Error al iniciar el servidor:", error);
+//     process.exit(1);
+//   }
+// }
 
-startServer();
+// startServer();
 
-// export default app;
+export default app;
